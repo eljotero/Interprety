@@ -8,43 +8,47 @@
             background-color: green;
             margin: 0;
         }
-        .roadbricks1::before{
+
+        .roadbricks1::before {
             content: "";
             position: absolute;
             top: 550px;
             height: 200px;
             width: 100%;
             background: repeating-linear-gradient(
-                0deg, 
-                grey, 
-                grey 20px, 
-                darkgrey 30px, 
-                darkgrey 30px
+                    0deg,
+                    grey,
+                    grey 20px,
+                    darkgrey 30px,
+                    darkgrey 30px
             );
         }
-        .roadbricks1::after{
+
+        .roadbricks1::after {
             content: "";
             position: absolute;
             top: 550px;
             height: 200px;
             width: 100%;
             background: repeating-linear-gradient(
-                90deg, 
-                grey, 
-                grey 20px, 
-                darkgrey 30px, 
-                darkgrey 30px
+                    90deg,
+                    grey,
+                    grey 20px,
+                    darkgrey 30px,
+                    darkgrey 30px
             );
             mix-blend-mode: lighten;
         }
+
         .sky {
             position: absolute;
-            top: 0px;
-            left: 0px;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 300px;
             background-color: rgb(0, 128, 255);
         }
+
         .sun {
             position: absolute;
             top: 50px;
@@ -54,83 +58,150 @@
             background-color: yellow;
             border-radius: 50%;
         }
-        .left_wheel {
+        .left_wheel, .right_wheel {
             position: absolute;
-            top: 600px;
-            left: 148px;
-            width: 100px;
-            height: 100px;
             background: transparent;
             border-radius: 50%;
-            border: 7px solid rgb(0, 0, 0);
+            border: 7px solid black;
+            width: 100px;
+            height: 100px;
         }
+        .left_wheel {
+            top: 600px;
+            left: 145px;
+        }
+
+        .right_wheel {
+            top: 600px;
+            left: 545px;
+        }
+
         .mudguard {
             position: absolute;
             top: 580px;
             left: 120px;
-            width: 150px;
-            height: 80px;
+            width: 142px;
+            height: 73px;
             border-radius: 12rem 12rem 0 0;
             background-color: transparent;
             border: 8px solid yellow;
             border-bottom: none;
         }
-        .pipe_1 {
+        .pipe_1, .pipe_2, .pipe_3 {
             position: absolute;
-            top: 665px;
-            left: 278px;
-            width: 150px;
-            height: 8px;
             background: yellow;
+            border-radius: 10px;
         }
+
+        .pipe_1 {
+            top: 655px;
+            left: 200px;
+            width: 235px;
+            height: 6px;
+        }
+
         .pipe_2 {
-            position: absolute;
-            top: 580px;
-            left: 390px;
+            top: 568px;
+            left: 395px;
             width: 245px;
             height: 8px;
-            background: yellow;
             transform: rotate(-45deg);
         }
-        .right_wheel {
-            position: absolute;
-            top: 600px;
-            left: 543px;
-            width: 100px;
-            height: 100px;
-            background: transparent;
-            border-radius: 50%;
-            border: 7px solid black;
-        }
+
         .pipe_3 {
-            position: absolute;
             top: 480px;
-            left: 593px;
+            left: 598px;
             width: 8px;
             height: 180px;
-            background: yellow;
         }
+
         .pipe_4 {
             position: absolute;
-            top: 480px;
+            top: 481px;
             left: 535px;
             width: 140px;
             height: 8px;
             background: black;
             transform: rotate(45deg);
+            border-radius: 10px;
+        }
+        .spoke_1, .spoke_2, .spoke_3, .spoke_4 {
+            position: relative;
+            background: grey;
+            border: 2px solid black;
+        }
+
+        .spoke_1 {
+            width: 100px;
+            height: 2px;
+            top: 50%;
+        }
+
+        .spoke_2 {
+            width: 100px;
+            height: 2px;
+            top: 43%;
+            transform: rotate(90deg);
+        }
+
+        .spoke_3 {
+            width: 100px;
+            height: 2px;
+            top: 38%;
+            transform: rotate(-45deg);
+        }
+
+        .spoke_4 {
+            width: 100px;
+            height: 2px;
+            top: 30%;
+            right: 2%;
+            transform: rotate(45deg);
+        }
+        .handle_1, .handle_2 {
+            position: relative;
+            border-radius: 25px;
+            background: black;
+            border: 4px solid #181515;
+            transform: rotate(90deg);
+        }
+        .handle_1 {
+            width: 50px;
+            height: 7px;
+            right: 18%;
+            bottom: 320%;
+        }
+        .handle_2 {
+            width: 50px;
+            height: 7px;
+            left: 80%;
+            bottom: 480%;
         }
     </style>
 </head>
 <body>
-    <div class="sky"></div>
-    <div class="sun"></div>
-    <div class="roadbricks1"></div>
-    <div class="left_wheel"></div>
-    <div class="mudguard"></div>
-    <div class="pipe_1"></div>
-    <div class="pipe_2"></div>
-    <div class="pipe_3"></div>
-    <div class="right_wheel"></div>
-    <div class="pipe_4"></div>
+<div class="sky"></div>
+<div class="sun"></div>
+<div class="roadbricks1"></div>
+<div class="left_wheel">
+    <div class="spoke_1"></div>
+    <div class="spoke_2"></div>
+    <div class="spoke_3"></div>
+    <div class="spoke_4"></div>
+</div>
+<div class="mudguard"></div>
+<div class="pipe_1"></div>
+<div class="pipe_2"></div>
+<div class="pipe_3"></div>
+<div class="right_wheel">
+    <div class="spoke_1"></div>
+    <div class="spoke_2"></div>
+    <div class="spoke_3"></div>
+    <div class="spoke_4"></div>
+</div>
+<div class="pipe_4">
+    <div class="handle_1"></div>
+    <div class="handle_2"></div>
+</div>
 </body>
 </html>
