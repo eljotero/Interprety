@@ -1,3 +1,4 @@
+
 body {
     background-color: rgb(0, 128, 0);
     margin: 0;
@@ -10,6 +11,7 @@ body {
     height: 25%;
     width: 100%;
 }
+
 .roadbricks1::before {
     background: repeating-linear-gradient(
             0deg,
@@ -19,6 +21,7 @@ body {
             rgb(169, 169, 169) 30px
     );
 }
+
 .roadbricks1::after {
     background: repeating-linear-gradient(
             90deg,
@@ -38,14 +41,17 @@ body {
     height: 33%;
     background-color: rgb(0, 128, 255);
 }
-.cloud,.cloud::after,.cloud::before {
+
+.cloud, .cloud::after, .cloud::before {
     position: absolute;
     background: rgb(255, 255, 255);
 }
+
 .cloud::after, .cloud::before {
     content: '';
     border-radius: 80%;
 }
+
 .cloud {
     width: 10%;
     height: 7%;
@@ -62,6 +68,7 @@ body {
     top: -30%;
     left: 20%;
 }
+
 .cloud:before {
     width: 55%;
     height: 135%;
