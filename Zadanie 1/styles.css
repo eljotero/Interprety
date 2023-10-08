@@ -1,0 +1,187 @@
+body {
+    background-color: #008000;
+    margin: 0;
+}
+
+.roadbricks1::before {
+    content: "";
+    position: absolute;
+    top: 60%;
+    height: 25%;
+    width: 100%;
+    background: repeating-linear-gradient(
+            0deg,
+            grey,
+            grey 20px,
+            darkgrey 30px,
+            darkgrey 30px
+    );
+}
+
+.roadbricks1::after {
+    content: "";
+    position: absolute;
+    top: 60%;
+    height: 25%;
+    width: 100%;
+    background: repeating-linear-gradient(
+            90deg,
+            grey,
+            grey 20px,
+            darkgrey 30px,
+            darkgrey 30px
+    );
+    mix-blend-mode: lighten;
+}
+
+.sky {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 33%;
+    background-color: rgb(0, 128, 255);
+}
+
+.sun {
+    position: absolute;
+    right: 10%;
+    top: 5%;
+    width: 5%;
+    height: 10%;
+    background-color: yellow;
+    border-radius: 50%;
+}
+
+.left_wheel, .right_wheel {
+    position: absolute;
+    background: transparent;
+    border-radius: 50%;
+    border: 7px solid black;
+    width: 10%;
+    height: 10%;
+    min-height: 50px;
+    min-width: 50px;
+    max-width: 80px;
+    max-height: 80px;
+}
+
+.left_wheel {
+    top: 65%;
+    left: 15%;
+}
+
+.right_wheel {
+    top: 65%;
+    left: 33.7%;
+}
+
+.mudguard {
+    position: absolute;
+    top: 62%;
+    left: 13%;
+    width: 7.5%;
+    height: 7.5%;
+    border-radius: 12rem 12rem 0 0;
+    background-color: transparent;
+    border: 8px solid yellow;
+    border-bottom: none;
+}
+
+.pipe_1, .pipe_2, .pipe_3 {
+    position: absolute;
+    background: yellow;
+    border-radius: 10px;
+}
+
+.pipe_1 {
+    top: 70%;
+    left: 17.5%;
+    width: 10%;
+    height: 0.6%;
+}
+
+.pipe_2 {
+    top: 61%;
+    left: 25.5%;
+    width: 12.5%;
+    height: 0.7%;
+    transform: rotate(-45deg);
+}
+
+.pipe_3 {
+    top: 52%;
+    left: 36%;
+    width: 0.4%;
+    height: 19%;
+}
+
+.pipe_4 {
+    position: absolute;
+    top: 51.5%;
+    left: 32.5%;
+    width: 7%;
+    height: 0.7%;
+    background: black;
+    transform: rotate(45deg);
+    border-radius: 10px;
+}
+
+.spoke_1, .spoke_2, .spoke_3, .spoke_4 {
+    position: relative;
+    background: grey;
+    border: 2px solid black;
+}
+
+.spoke_1 {
+    width: 100%;
+    height: 0.2%;
+    top: 50%;
+}
+
+.spoke_2 {
+    width: 100%;
+    height: 0.2%;
+    top: 40%;
+    transform: rotate(90deg);
+}
+
+.spoke_3 {
+    width: 100%;
+    height: 0.2%;
+    top: 35%;
+    transform: rotate(-45deg);
+}
+
+.spoke_4 {
+    width: 100%;
+    height: 0.7%;
+    top: 28.5%;
+    transform: rotate(45deg);
+}
+
+.handle_1, .handle_2 {
+    position: relative;
+    border-radius: 25px;
+    background: black;
+    border: 4px solid #181515;
+    transform: rotate(90deg);
+}
+
+.handle_1 {
+    width: 30%;
+    height: 7%;
+    right: 17%;
+    bottom: 328%;
+    max-width: 30%;
+    max-height: 7%;
+}
+
+.handle_2 {
+    width: 30%;
+    height: 7%;
+    left: 80%;
+    bottom: 450%;
+    max-width: 30%;
+    max-height: 7%;
+}
