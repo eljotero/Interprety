@@ -50,12 +50,13 @@ body {
     width: 10%;
     height: 7%;
     border-radius: 150px;
-    box-shadow: 10px 10px rgb(128, 128, 128);
+    box-shadow: 10px 10px grey;
     top: 10%;
-    left: 50%;
+    right: 10%;
+    animation: move 5s infinite;
 }
 
- .cloud:after {
+.cloud:after {
     width: 35%;
     height: 100%;
     top: -30%;
@@ -195,4 +196,13 @@ body {
 .handle_2 {
     left: 80%;
     bottom: 450%;
+}
+
+@keyframes move {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(-50%);
+    }
 }
