@@ -30,23 +30,6 @@ let updateTodoList = function () {
   while (todoListDiv.firstChild) {
     todoListDiv.removeChild(todoListDiv.firstChild);
   }
-
-  //add all elements
-  for (let todo in todoList) {
-    let newElement = document.createElement("div");
-    let newContent = document.createTextNode(
-      todoList[todo].title + " " + todoList[todo].description
-    );
-    let newDeleteButton = document.createElement("input");
-    newDeleteButton.type = "button";
-    newDeleteButton.value = "x";
-    newDeleteButton.addEventListener("click", function () {
-      deleteTodo(todo);
-    });
-    newElement.appendChild(newContent);
-    newElement.appendChild(newDeleteButton);
-    todoListDiv.appendChild(newElement);
-  }
   let filterInput = document.getElementById("inputSearch");
   for (let todo in todoList) {
     if (
@@ -58,7 +41,14 @@ let updateTodoList = function () {
       let newContent = document.createTextNode(
         todoList[todo].title + " " + todoList[todo].description
       );
+      let newDeleteButton = document.createElement("input");
+      newDeleteButton.type = "button";
+      newDeleteButton.value = "x";
+      newDeleteButton.addEventListener("click", function () {
+        deleteTodo(todo);
+      });
       newElement.appendChild(newContent);
+      newElement.appendChild(newDeleteButton);
       todoListDiv.appendChild(newElement);
     }
   }
@@ -88,5 +78,6 @@ let addTodo = function () {
   };
   //add item to the list
   todoList.push(newTodo);
+  //clear the form
   window.localStorage.setItem("todos", JSON.stringify(todoList));
 };
