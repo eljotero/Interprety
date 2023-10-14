@@ -58,34 +58,39 @@ error: (err) => {
 //initList();
 
 let updateTodoList = function () {
-  let todoListDiv = document.getElementById("todoListView");
-
+  let todoListView = document.getElementById("todoListView");
+  
   //remove all elements
-  while (todoListDiv.firstChild) {
-    todoListDiv.removeChild(todoListDiv.firstChild);
+  while (todoListView.firstChild) {
+    todoListView.removeChild(todoListView.firstChild);
   }
   
   let filterInput = document.getElementById("inputSearch");
-  for (let todo in todoList) {
+  for (let todo of todoList) {
     if (
       filterInput.value == "" ||
-      todoList[todo].title.includes(filterInput.value) ||
-      todoList[todo].description.includes(filterInput.value)
+      todo.title.includes(filterInput.value) ||
+      todo.description.includes(filterInput.value)
     ) {
-      let newElement = document.createElement("p");
-      let newContent = document.createTextNode(
-        todoList[todo].title + " " + todoList[todo].description
-      );
-      let newDeleteButton = document.createElement("input");
-      newDeleteButton.type = "button";
-      newDeleteButton.value = "x";
-      newDeleteButton.addEventListener("click", function () {
+      let newRow = todoListView.insertRow();
+
+      let titleColumn = newRow.insertCell(0);
+      titleColumn.textContent = todo.title;
+
+      let descriptionColumn = newRow.insertCell(1);
+      descriptionColumn.textContent = todo.description;
+
+      let deleteButtonColumn = newRow.insertCell(2);
+      let deleteButton = document.createElement("input");
+      deleteButton.type = "button";
+      deleteButton.value = "X";
+
+      deleteButton.addEventListener("click", function () {
         deleteTodo(todo);
       });
-      newElement.appendChild(newContent);
-      newElement.appendChild(newDeleteButton);
-      todoListDiv.appendChild(newElement);
+      deleteButtonColumn.appendChild(deleteButton);
     }
+
   }
 };
 
