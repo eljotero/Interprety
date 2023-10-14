@@ -1,30 +1,7 @@
 "use strict";
 let todoList = [];
 
-let initList = function () {
-  let savedList = window.localStorage.getItem("todos");
-  if (savedList != null) todoList = JSON.parse(savedList);
-  else if (savedList != null) todoList = JSON.parse(savedList);
-  else
-    todoList.push(
-      {
-        title: "Learn JS",
-        description: "Create a demo application for my TODO's",
-        place: "445",
-        dueDate: new Date(2019, 10, 16),
-      },
-      {
-        title: "Lecture test",
-        description: "Quick test from the first three lectures",
-        place: "F6",
-        dueDate: new Date(2019, 10, 17),
-      }
-      // of course the lecture test mentioned above will not take place
-    );
-};
-
 let req = new XMLHttpRequest();
-
 req.onreadystatechange = () => {
   if (req.readyState == XMLHttpRequest.DONE) {
     //console.log(req.responseText);
@@ -55,7 +32,6 @@ error: (err) => {
 });
 }
 
-//initList();
 
 let updateTodoList = function () {
   let todoListView = document.getElementById("todoListView");
