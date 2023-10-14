@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="theme.css" />
     <script src="scripts.js"></script>
     <title>MyTODO App</title>
   </head>
   <body>
     <h1>MyNotes</h1>
-    <div id="todoListView"></div>
+    <header>My Todo List</header>
+    <table id="todoListView">
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+      </tr>
+    </table>
     <form>
       <label>Title</label>
       <input type="text" id="inputTitle" />
