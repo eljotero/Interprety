@@ -34,16 +34,16 @@ error: (err) => {
 
 
 let updateTodoList = function () {
-  let todoListView = document.getElementById("todoListView");
+  let todoListView = $("#todoListView")[0];
 
   // Remove all elements
   while (todoListView.firstChild) {
     todoListView.removeChild(todoListView.firstChild);
   }
 
-  let filterInput = document.getElementById("inputSearch").value;
-  let beforeDate = document.getElementById("beforeDate").value;
-  let afterDate = document.getElementById("afterDate").value;
+  let filterInput = $("#inputSearch").val();
+  let beforeDate = $("#beforeDate").val();
+  let afterDate = $("#afterDate").val();
 
   for (let todo of todoList) {
     let todoDueDate = new Date(todo.dueDate);
@@ -85,15 +85,15 @@ let deleteTodo = function (index) {
 
 let addTodo = function () {
   //get the elements in the form
-  let inputTitle = document.getElementById("inputTitle");
-  let inputDescription = document.getElementById("inputDescription");
-  let inputPlace = document.getElementById("inputPlace");
-  let inputDate = document.getElementById("inputDate");
+  let inputTitle = $("#inputTitle").val();
+  let inputDescription = $("#inputDescription").val();
+  let inputPlace = $("#inputPlace").val();
+  let inputDate = $("#inputDate").val();
   //get the values from the form
-  let newTitle = inputTitle.value;
-  let newDescription = inputDescription.value;
-  let newPlace = inputPlace.value;
-  let newDate = new Date(inputDate.value);
+  let newTitle = inputTitle;
+  let newDescription = inputDescription;
+  let newPlace = inputPlace;
+  let newDate = new Date(inputDate);
   //create new item
   let newTodo = {
     title: newTitle,
