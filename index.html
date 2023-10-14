@@ -3,28 +3,51 @@
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="theme.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
     <script src="scripts.js"></script>
     <title>MyTODO App</title>
   </head>
   <body>
     <h1>MyNotes</h1>
-    <header>My Todo List</header>
-    <table id="todoListView">
+    <table id="todoListView" class="table table-striped">
       <tr>
         <th>Title</th>
         <th>Description</th>
+        <th>Place</th>
+        <th>Date</th>
       </tr>
     </table>
     <form>
       <label>Title</label>
-      <input type="text" id="inputTitle" />
+      <div class="input-group mb-3">
+        <span class="input-group-text"></span>
+        <input type="text" id="inputTitle" />
+      </div>
       <label>Description</label>
-      <input type="text" id="inputDescription" />
+      <div class="input-group mb-3">
+        <span class="input-group-text"></span>
+        <input type="text" id="inputDescription" />
+      </div>
       <label>Place</label>
-      <input type="text" id="inputPlace" />
+      <div class="input-group mb-3">
+        <span class="input-group-text"></span>
+        <input type="text" id="inputPlace" />
+      </div>
       <label>Due date</label>
-      <input type="date" id="inputDate" />
-      <input type="button" value="add" onclick="addTodo()" />
+      <div class="input-group mb-3">
+        <span class="input-group-text"></span>
+        <input type="date" id="inputDate" />
+      </div>
+      <input
+        class="btn-default"
+        type="button"
+        value="Add"
+        onclick="addTodo()"
+      />
     </form>
     <div>
       <label>Search</label>

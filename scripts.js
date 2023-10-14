@@ -42,22 +42,24 @@ $.ajax({
     console.log(err.responseJSON);
   },
 });
-let updateJSONbin = function() {
+let updateJSONbin = function () {
   $.ajax({
-url: BASE_URL,
-type: 'PUT',
-headers: { //Required only if you are trying to access a private bin
-  'X-Master-Key': SECRET_KEY
-},
-contentType: 'application/json',
-data: JSON.stringify(todoList),
-success: (data) => {
-  console.log(data);
-},
-error: (err) => {
-  console.log(err.responseJSON);
-}
-})};
+    url: BASE_URL,
+    type: "PUT",
+    headers: {
+      //Required only if you are trying to access a private bin
+      "X-Master-Key": SECRET_KEY,
+    },
+    contentType: "application/json",
+    data: JSON.stringify(todoList),
+    success: (data) => {
+      console.log(data);
+    },
+    error: (err) => {
+      console.log(err.responseJSON);
+    },
+  });
+};
 let updateTodoList = function () {
   let todoListVariable = document.getElementById("todoListView");
 
@@ -76,8 +78,18 @@ let updateTodoList = function () {
       let cellTitle = row.insertCell(0);
       cellTitle.appendChild(document.createTextNode(todoList[todo].title));
       let cellDescription = row.insertCell(1);
-      cellDescription.appendChild(document.createTextNode(todoList[todo].description));
-      let buttonColumn = row.insertCell(2);
+      cellDescription.appendChild(
+        document.createTextNode(todoList[todo].description)
+      );
+      let placeColumn = row.insertCell(2);
+      placeColumn.appendChild(document.createTextNode(todoList[todo].place));
+      let dateColumn = row.insertCell(3);
+      dateColumn.appendChild(
+        document.createTextNode(
+          new Date(todoList[todo].dueDate).toLocaleDateString()
+        )
+      );
+      let buttonColumn = row.insertCell(4);
       let newDeleteButton = document.createElement("input");
       newDeleteButton.type = "button";
       newDeleteButton.value = "x";
