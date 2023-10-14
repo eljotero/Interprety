@@ -1,5 +1,6 @@
 "use strict";
 let todoList = [];
+
 let initList = function () {
   let savedList = window.localStorage.getItem("todos");
   if (savedList != null) todoList = JSON.parse(savedList);
@@ -22,7 +23,40 @@ let initList = function () {
     );
 };
 
-initList();
+let req = new XMLHttpRequest();
+
+req.onreadystatechange = () => {
+  if (req.readyState == XMLHttpRequest.DONE) {
+    //console.log(req.responseText);
+    todoList = JSON.parse(req.responseText).record;
+  }
+
+};
+
+req.open("GET", "https://api.jsonbin.io/v3/b/6529da9454105e766fc1fcb9", true);
+req.setRequestHeader("X-Master-Key", "$2a$10$HqSb7Wy1woHrd97KQg1KteO/GRd7iy.IrWGAmHwlPb6XVW1IAd.xC");
+req.send();
+
+let updateJSONbin = function() {
+  $.ajax({
+url: 'https://api.jsonbin.io/v3/b/6529da9454105e766fc1fcb9',
+type: 'PUT',
+headers: { //Required only if you are trying to access a private bin
+  'X-Master-Key': '$2a$10$HqSb7Wy1woHrd97KQg1KteO/GRd7iy.IrWGAmHwlPb6XVW1IAd.xC'
+},
+contentType: 'application/json',
+data: JSON.stringify(todoList),
+success: (data) => {
+  console.log(data);
+},
+error: (err) => {
+  console.log(err.responseJSON);
+}
+});
+}
+
+//initList();
+
 let updateTodoList = function () {
   let todoListDiv = document.getElementById("todoListView");
 
@@ -30,6 +64,7 @@ let updateTodoList = function () {
   while (todoListDiv.firstChild) {
     todoListDiv.removeChild(todoListDiv.firstChild);
   }
+  
   let filterInput = document.getElementById("inputSearch");
   for (let todo in todoList) {
     if (
@@ -55,9 +90,12 @@ let updateTodoList = function () {
 };
 
 setInterval(updateTodoList, 1000);
+
 let deleteTodo = function (index) {
   todoList.splice(index, 1);
+  updateJSONbin();
 };
+
 let addTodo = function () {
   //get the elements in the form
   let inputTitle = document.getElementById("inputTitle");
@@ -78,6 +116,7 @@ let addTodo = function () {
   };
   //add item to the list
   todoList.push(newTodo);
+  updateJSONbin();
   //clear the form
   window.localStorage.setItem("todos", JSON.stringify(todoList));
 };
