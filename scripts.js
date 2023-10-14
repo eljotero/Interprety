@@ -35,19 +35,26 @@ error: (err) => {
 
 let updateTodoList = function () {
   let todoListView = document.getElementById("todoListView");
-  
-  //remove all elements
+
+  // Remove all elements
   while (todoListView.firstChild) {
     todoListView.removeChild(todoListView.firstChild);
   }
-  
-  let filterInput = document.getElementById("inputSearch");
+
+  let filterInput = document.getElementById("inputSearch").value;
+  let beforeDate = document.getElementById("beforeDate").value;
+  let afterDate = document.getElementById("afterDate").value;
+
   for (let todo of todoList) {
-    if (
-      filterInput.value == "" ||
-      todo.title.includes(filterInput.value) ||
-      todo.description.includes(filterInput.value)
-    ) {
+    let todoDueDate = new Date(todo.dueDate);
+
+    let isDateInRange =
+      (!beforeDate || todoDueDate <= new Date(beforeDate)) &&
+      (!afterDate || todoDueDate >= new Date(afterDate));
+
+    if (isDateInRange && 
+    (!filterInput || todo.title.includes(filterInput) || todo.description.includes(filterInput))) 
+    {
       let newRow = todoListView.insertRow();
 
       let titleColumn = newRow.insertCell(0);
@@ -62,11 +69,10 @@ let updateTodoList = function () {
       deleteButton.value = "X";
 
       deleteButton.addEventListener("click", function () {
-        deleteTodo(todo);
+        deleteTodo(todoList.indexOf(todo));
       });
       deleteButtonColumn.appendChild(deleteButton);
     }
-
   }
 };
 
