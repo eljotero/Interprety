@@ -1,44 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <link rel="stylesheet" type="text/css" href="theme.css" />
+    <link rel="stylesheet" type="text/css" href="theme.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="scripts.js"></script>
+    <script src="js/bootstrap.js"></script>
     <title>MyTODO App</title>
   </head>
   <body>
-    <h1>MyNotes</h1>
-    <table>
+    <h1>My Notes</h1>
+
+    <table class = "table">
       <thead>
         <tr>
-          <th colspan="2">MyTODO LIST</th>
+          <th colspan="5" class = "text-center">MyTODO LIST</th>
+        </tr>
+        <tr>
+          <th scope = "col" class = "text-center">Title</th>
+          <th scope = "col" class = "text-center">Description</th>
+          <th scope = "col" class = "text-center">Place</th>
+          <th scope = "col" class = "text-center">Due date</th>
+          <th scope = "col" class = "text-center">Delete</th>
         </tr>
       </thead>
-      <tbody id="todoListView"></tbody>
+      <tbody id="todoListView" class = "text-center">
     </table>
 
     <form>
-      <label>Title</label>
-      <input type="text" id="inputTitle" />
-      <label>Description</label>
-      <input type="text" id="inputDescription" />
-      <label>Place</label>
-      <input type="text" id="inputPlace" />
-      <label>Due date</label>
-      <input type="date" id="inputDate" />
-      <input type="button" value="add" onclick="addTodo()" />
-    </form>
+      <div class = "form-group">
+        <label>Title</label>
+        <input type="text" id="inputTitle">
+      </div>
+      <div class = "form-group">
+        <label>Description</label>
+        <input type="text" id="inputDescription">
+      </div>
+      <div class = "form-group">
+        <label>Place</label>
+        <input type="text" id="inputPlace">
+      </div>
+      <div class = "form-group">
+        <label>Due date</label>
+        <input type="date" id="inputDate">
+      </div> 
+      
+      <button type="button" class="btn btn-dark" onclick="addTodo()">Add</button>    </form>
+
     <div>
       <label>Search</label>
       <input
         type="text"
         id="inputSearch"
-        placeholder="Type Your seach here..."
-      />
+        placeholder="Type Your seach here...">
       <label>From: </label>
-      <input type="date" id="afterDate" />
+      <input type="date" id="afterDate">
       <label>To: </label>
-      <input type="date" id="beforeDate"/>
+      <input type="date" id="beforeDate">
     </div>
+
   </body>
 </html>

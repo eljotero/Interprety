@@ -7,39 +7,40 @@ req.onreadystatechange = () => {
     //console.log(req.responseText);
     todoList = JSON.parse(req.responseText).record;
   }
-
 };
 
 req.open("GET", "https://api.jsonbin.io/v3/b/6529da9454105e766fc1fcb9", true);
-req.setRequestHeader("X-Master-Key", "$2a$10$HqSb7Wy1woHrd97KQg1KteO/GRd7iy.IrWGAmHwlPb6XVW1IAd.xC");
+req.setRequestHeader(
+  "X-Master-Key",
+  "$2a$10$HqSb7Wy1woHrd97KQg1KteO/GRd7iy.IrWGAmHwlPb6XVW1IAd.xC"
+);
 req.send();
 
-let updateJSONbin = function() {
+let updateJSONbin = function () {
   $.ajax({
-url: 'https://api.jsonbin.io/v3/b/6529da9454105e766fc1fcb9',
-type: 'PUT',
-headers: { //Required only if you are trying to access a private bin
-  'X-Master-Key': '$2a$10$HqSb7Wy1woHrd97KQg1KteO/GRd7iy.IrWGAmHwlPb6XVW1IAd.xC'
-},
-contentType: 'application/json',
-data: JSON.stringify(todoList),
-success: (data) => {
-  console.log(data);
-},
-error: (err) => {
-  console.log(err.responseJSON);
-}
-});
-}
-
+    url: "https://api.jsonbin.io/v3/b/6529da9454105e766fc1fcb9",
+    type: "PUT",
+    headers: {
+      //Required only if you are trying to access a private bin
+      "X-Master-Key":
+        "$2a$10$HqSb7Wy1woHrd97KQg1KteO/GRd7iy.IrWGAmHwlPb6XVW1IAd.xC",
+    },
+    contentType: "application/json",
+    data: JSON.stringify(todoList),
+    success: (data) => {
+      console.log(data);
+    },
+    error: (err) => {
+      console.log(err.responseJSON);
+    },
+  });
+};
 
 let updateTodoList = function () {
   let todoListView = $("#todoListView")[0];
 
   // Remove all elements
-  while (todoListView.firstChild) {
-    todoListView.removeChild(todoListView.firstChild);
-  }
+  $(todoListView).empty();
 
   let filterInput = $("#inputSearch").val();
   let beforeDate = $("#beforeDate").val();
@@ -52,26 +53,39 @@ let updateTodoList = function () {
       (!beforeDate || todoDueDate <= new Date(beforeDate)) &&
       (!afterDate || todoDueDate >= new Date(afterDate));
 
-    if (isDateInRange && 
-    (!filterInput || todo.title.includes(filterInput) || todo.description.includes(filterInput))) 
-    {
-      let newRow = todoListView.insertRow();
+    if (
+      isDateInRange &&
+      (!filterInput ||
+        todo.title.includes(filterInput) ||
+        todo.description.includes(filterInput))
+    ) {
+      let newRow = $("<tr>");
 
-      let titleColumn = newRow.insertCell(0);
-      titleColumn.textContent = todo.title;
+      let titleColumn = $("<td>").text(todo.title);
+      newRow.append(titleColumn);
 
-      let descriptionColumn = newRow.insertCell(1);
-      descriptionColumn.textContent = todo.description;
+      let descriptionColumn = $("<td>").text(todo.description);
+      newRow.append(descriptionColumn);
 
-      let deleteButtonColumn = newRow.insertCell(2);
-      let deleteButton = document.createElement("input");
-      deleteButton.type = "button";
-      deleteButton.value = "X";
+      let placeColumn = $("<td>").text(todo.place);
+      newRow.append(placeColumn);
 
-      deleteButton.addEventListener("click", function () {
-        deleteTodo(todoList.indexOf(todo));
-      });
-      deleteButtonColumn.appendChild(deleteButton);
+      let dueDateColumn = $("<td>").text(new Date(todo.dueDate).toDateString());
+      newRow.append(dueDateColumn);
+
+      let deleteButtonColumn = $("<td>");
+      let deleteButton = $("<button>")
+        .attr("type", "button")
+        .attr("class", "btn btn-danger btn-sm btn-block")
+        .text("X")
+        .click(function () {
+          deleteTodo(todoList.indexOf(todo));
+        });
+
+      deleteButtonColumn.append(deleteButton);
+      newRow.append(deleteButtonColumn);
+
+      $(todoListView).append(newRow);
     }
   }
 };
