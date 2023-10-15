@@ -3,28 +3,6 @@ const BASE_URL = "https://api.jsonbin.io/v3/b/652ac1b10574da7622b8d5e5";
 const SECRET_KEY =
   "$2a$10$NH5OYxhOGireSJAXPmrDQ.dCEQBWKq6VqQ9L4LkQMG9WrjT2.Rbcm";
 let todoList = [];
-let initList = function () {
-  let savedList = window.localStorage.getItem("todos");
-  if (savedList != null) todoList = JSON.parse(savedList);
-  else if (savedList != null) todoList = JSON.parse(savedList);
-  else
-    todoList.push(
-      {
-        title: "Learn JS",
-        description: "Create a demo application for my TODO's",
-        place: "445",
-        dueDate: new Date(2019, 10, 16),
-      },
-      {
-        title: "Lecture test",
-        description: "Quick test from the first three lectures",
-        place: "F6",
-        dueDate: new Date(2019, 10, 17),
-      }
-      // of course the lecture test mentioned above will not take place
-    );
-};
-//initList();
 $.ajax({
   // copy Your bin identifier here. It can be obtained in the dashboard
   url: BASE_URL,
@@ -61,42 +39,37 @@ let updateJSONbin = function () {
   });
 };
 let updateTodoList = function () {
-  let todoListVariable = document.getElementById("todoListView");
-
-  //remove all elements
-  while (todoListVariable.rows.length > 1) {
-    todoListVariable.deleteRow(1);
-  }
-  let filterInput = document.getElementById("inputSearch");
+  $("#todoListView tr:gt(0)").remove();
+  let filterInput = $("#inputSearch")[0].value;
+  let date1 = $("#inputFilterDate1")[0].value;
+  let date2 = $("#inputFilterDate2")[0].value;
   for (let todo in todoList) {
+    let taskDate = new Date(todoList[todo].dueDate);
     if (
-      filterInput.value == "" ||
-      todoList[todo].title.includes(filterInput.value) ||
-      todoList[todo].description.includes(filterInput.value)
+      (filterInput == "" ||
+        todoList[todo].title.includes(filterInput) ||
+        todoList[todo].description.includes(filterInput)) &&
+      (date1 == "" || taskDate >= new Date(date1)) &&
+      (date2 == "" || taskDate <= new Date(date2))
     ) {
-      let row = todoListVariable.insertRow();
-      let cellTitle = row.insertCell(0);
-      cellTitle.appendChild(document.createTextNode(todoList[todo].title));
-      let cellDescription = row.insertCell(1);
-      cellDescription.appendChild(
-        document.createTextNode(todoList[todo].description)
-      );
-      let placeColumn = row.insertCell(2);
-      placeColumn.appendChild(document.createTextNode(todoList[todo].place));
-      let dateColumn = row.insertCell(3);
-      dateColumn.appendChild(
-        document.createTextNode(
-          new Date(todoList[todo].dueDate).toLocaleDateString()
-        )
-      );
-      let buttonColumn = row.insertCell(4);
-      let newDeleteButton = document.createElement("input");
-      newDeleteButton.type = "button";
-      newDeleteButton.value = "x";
-      newDeleteButton.addEventListener("click", function () {
-        deleteTodo(todo);
-      });
-      buttonColumn.appendChild(newDeleteButton);
+
+      let row = $("<tr></tr>").appendTo("#todoListView");
+      let cellTitle = $("<td></td>").appendTo(row);
+      cellTitle.text(todoList[todo].title);
+      let cellDescription = $("<td></td>").appendTo(row);
+      cellDescription.text(todoList[todo].description);
+      let cellPlace = $("<td></td>").appendTo(row);
+      cellPlace.text(todoList[todo].place);
+      let dateColumn = $("<td></td>").appendTo(row);
+      dateColumn.text(new Date(todoList[todo].dueDate).toLocaleDateString());
+      let buttonColumn = $("<td></td>").appendTo(row);
+      let newDeleteButton = $("<input>")
+        .attr("type", "button")
+        .attr("value", "x")
+        .click(function () {
+          deleteTodo(todo);
+        });
+      buttonColumn.append(newDeleteButton);
     }
   }
 };
@@ -108,10 +81,10 @@ let deleteTodo = function (index) {
 };
 let addTodo = function () {
   //get the elements in the form
-  let inputTitle = document.getElementById("inputTitle");
-  let inputDescription = document.getElementById("inputDescription");
-  let inputPlace = document.getElementById("inputPlace");
-  let inputDate = document.getElementById("inputDate");
+  let inputTitle = $("#inputTitle")[0];
+  let inputDescription = $("#inputDescription")[0];
+  let inputPlace = $("#inputPlace")[0];
+  let inputDate = $("#inputDate")[0];
   //get the values from the form
   let newTitle = inputTitle.value;
   let newDescription = inputDescription.value;
