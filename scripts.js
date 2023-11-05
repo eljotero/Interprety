@@ -52,7 +52,6 @@ let updateTodoList = function () {
       (date1 == "" || taskDate >= new Date(date1)) &&
       (date2 == "" || taskDate <= new Date(date2))
     ) {
-
       let row = $("<tr></tr>").appendTo("#todoListView");
       let cellTitle = $("<td></td>").appendTo(row);
       cellTitle.text(todoList[todo].title);
@@ -65,6 +64,7 @@ let updateTodoList = function () {
       let buttonColumn = $("<td></td>").appendTo(row);
       let newDeleteButton = $("<input>")
         .attr("type", "button")
+        .attr("class", "btn btn-danger")
         .attr("value", "x")
         .click(function () {
           deleteTodo(todo);

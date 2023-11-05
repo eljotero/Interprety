@@ -13,7 +13,7 @@
   </head>
   <body>
     <h1>MyNotes</h1>
-    <table id="todoListView" class="table table-striped">
+    <table id="todoListView" class="table table-bordered table-hover">
       <tr>
         <th>Title</th>
         <th>Description</th>
@@ -43,8 +43,8 @@
         <input type="date" id="inputDate" />
       </div>
       <input
-        class="btn-default"
         type="button"
+        class="btn btn-secondary"
         value="Add"
         onclick="addTodo()"
       />
@@ -59,14 +59,8 @@
     </div>
     <div class="input-group mb-3">
       <label>Filter by date</label>
-      <input
-        type="date"
-        id="inputFilterDate1"
-      />
-      <input
-        type="date"
-        id="inputFilterDate2"
-      />
+      <input type="date" id="inputFilterDate1" />
+      <input type="date" id="inputFilterDate2" />
     </div>
   </body>
 </html>
