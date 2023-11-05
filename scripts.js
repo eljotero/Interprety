@@ -4,7 +4,6 @@ let todoList = [];
 let req = new XMLHttpRequest();
 req.onreadystatechange = () => {
   if (req.readyState == XMLHttpRequest.DONE) {
-    //console.log(req.responseText);
     todoList = JSON.parse(req.responseText).record;
   }
 };
@@ -21,7 +20,6 @@ let updateJSONbin = function () {
     url: "https://api.jsonbin.io/v3/b/6529da9454105e766fc1fcb9",
     type: "PUT",
     headers: {
-      //Required only if you are trying to access a private bin
       "X-Master-Key":
         "$2a$10$HqSb7Wy1woHrd97KQg1KteO/GRd7iy.IrWGAmHwlPb6XVW1IAd.xC",
     },
@@ -39,7 +37,6 @@ let updateJSONbin = function () {
 let updateTodoList = function () {
   let todoListView = $("#todoListView")[0];
 
-  // Remove all elements
   $(todoListView).empty();
 
   let filterInput = $("#inputSearch").val();
@@ -76,7 +73,7 @@ let updateTodoList = function () {
       let deleteButtonColumn = $("<td>");
       let deleteButton = $("<button>")
         .attr("type", "button")
-        .attr("class", "btn btn-danger btn-sm btn-block")
+        .attr("class", "btn btn-outline-danger btn-sm btn-block")
         .text("X")
         .click(function () {
           deleteTodo(todoList.indexOf(todo));
