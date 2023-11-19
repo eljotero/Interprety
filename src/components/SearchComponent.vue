@@ -97,7 +97,9 @@ export default {
       this.yearsError = areYearsInvalid;
       if (this.movies && this.movies.length > 0) {
         this.filteredMovies = _.filter(this.movies, (movie) => {
-          const titleMatch = movie.title.includes(this.searchTitle);
+          const titleMatch = movie.title
+            .toLowerCase()
+            .includes(this.searchTitle.toLowerCase());
           const yearMatch =
             (!this.searchYear1 || movie.year >= this.searchYear1) &&
             (!this.searchYear2 || movie.year <= this.searchYear2);
