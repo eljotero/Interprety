@@ -31,7 +31,7 @@
     <div class="mb-1 w-25">
       <label for="year2" class="form-label">Rok produkcji do:</label>
       <input
-        type="nunber"
+        type="number"
         v-model="searchYear2"
         @input="searchMovie"
         placeholder="Liczba naturalna z przedziału 1900-2019"
@@ -97,12 +97,15 @@ export default {
       this.yearsError = areYearsInvalid;
       if (this.movies && this.movies.length > 0) {
         this.filteredMovies = _.filter(this.movies, (movie) => {
-          return (
-            movie.title.includes(this.searchTitle) ||
-            (movie.year >= this.searchYear1 &&
-              movie.year <= this.searchYear2) ||
-            (movie.cast.includes(this.castSearch) && this.castSearch !== "")
-          );
+          const titleMatch = movie.title.includes(this.searchTitle);
+          const yearMatch =
+            (!this.searchYear1 || movie.year >= this.searchYear1) &&
+            (!this.searchYear2 || movie.year <= this.searchYear2);
+          const castMatch =
+            _.isEmpty(this.castSearch) ||
+            _.includes(movie.cast, this.castSearch);
+
+          return titleMatch && yearMatch && castMatch;
         });
       } else {
         this.filteredMovies = [];
