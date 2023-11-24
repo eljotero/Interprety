@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h1 class="display-6">Filmy wg gatunku</h1>
-    <ul v-for="(moviesByGenre, genre) in moviesGroupedByGenre" :key="genre">
-      <li class="h">{{ genre }}</li>
+    <h1 class="display-6">Filmy wg obsady</h1>
+    <ul v-for="(moviesByCast, cast) in moviesGroupedByCast" :key="cast">
+      <li class="h">{{ cast }}</li>
       <ul class="list-group">
         <li
-          v-for="movie in moviesByGenre"
+          v-for="movie in moviesByCast"
           :key="movie.id"
           class="list-group-item w-25 text-start"
         >
@@ -23,21 +23,24 @@ export default {
   props: ["movies"],
   data() {
     return {
-      moviesGroupedByGenre: {},
+      moviesGroupedByCast: {},
       moviesShorten: {},
     };
   },
   mounted() {
-    this.moviesShorten = this.movies.slice(0, 100);
+    this.moviesShorten = _.filter(
+      this.movies,
+      (movie) => movie.cast && movie.cast.length > 0
+    ).slice(0, 100);
     const groupedMovies = _.groupBy(this.moviesShorten, (movie) =>
-      movie.genres.join(",")
+      movie.cast.join(",")
     );
-    for (const genre in groupedMovies) {
-      if (genre !== "") {
-        this.moviesGroupedByGenre[genre] = groupedMovies[genre];
+    for (const cast in groupedMovies) {
+      if (cast !== "") {
+        this.moviesGroupedByCast[cast] = groupedMovies[cast];
       }
     }
-    console.log(this.moviesGroupedByGenre);
+    console.log(this.moviesGroupedByCast);
   },
 };
 </script>
@@ -50,7 +53,7 @@ h1 {
   margin-left: 1%;
 }
 ul {
-    list-style-type: none;
+  list-style-type: none;
 }
 .h {
   font-size: 1.5rem;

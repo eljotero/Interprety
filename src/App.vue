@@ -1,20 +1,20 @@
 <template>
-  <SearchComponent :movies="movies" />
-  <ListGenre100Component :movies="movies" />
-  <ListCast100Component :movies="movies" />
+  <SearchBar :movies="movies" />
+  <ListGenre :movies="movies" />
+  <ListCast :movies="movies" />
 </template>
 
 <script>
-import SearchComponent from "./components/SearchBar.vue";
-import ListGenre100Component from "./components/ListGenre100Component.vue";
+import SearchBar from "./components/SearchBar.vue";
+import ListGenre from "./components/ListGenre.vue";
+import ListCast from "./components/ListCast.vue";
 import movies from "@/movies.json";
-import ListCast100Component from "./components/ListCast100Component.vue";
 export default {
   components: {
-    SearchComponent,
-    ListGenre100Component,
-    ListCast100Component
-},
+    SearchBar,
+    ListGenre,
+    ListCast,
+  },
   data() {
     return {
       movies: movies,

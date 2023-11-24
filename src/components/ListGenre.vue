@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h1 class="display-6">Filmy wg obsady</h1>
-    <ul v-for="(moviesByCast, cast) in moviesGroupedByCast" :key="cast">
-      <li class="h">{{ cast }}</li>
+    <h1 class="display-6">Filmy wg gatunku</h1>
+    <ul v-for="(moviesByGenre, genre) in moviesGroupedByGenre" :key="genre">
+      <li class="h">{{ genre }}</li>
       <ul class="list-group">
         <li
-          v-for="movie in moviesByCast"
+          v-for="movie in moviesByGenre"
           :key="movie.id"
           class="list-group-item w-25 text-start"
         >
@@ -23,21 +23,24 @@ export default {
   props: ["movies"],
   data() {
     return {
-      moviesGroupedByCast: {},
+      moviesGroupedByGenre: {},
       moviesShorten: {},
     };
   },
   mounted() {
-    this.moviesShorten = this.movies.slice(0, 100);
+    this.moviesShorten = _.filter(
+      this.movies,
+      (movie) => movie.genres && movie.genres.length > 0
+    ).slice(0, 100);
     const groupedMovies = _.groupBy(this.moviesShorten, (movie) =>
-      movie.cast.join(",")
+      movie.genres.join(",")
     );
-    for (const cast in groupedMovies) {
-      if (cast !== "") {
-        this.moviesGroupedByCast[cast] = groupedMovies[cast];
+    for (const genre in groupedMovies) {
+      if (genre !== "") {
+        this.moviesGroupedByGenre[genre] = groupedMovies[genre];
       }
     }
-    console.log(this.moviesGroupedByCast);
+    console.log(this.moviesGroupedByGenre);
   },
 };
 </script>
