@@ -1,65 +1,58 @@
 <template>
-    <div>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th
-              v-for="genre in genres"
-              :key="genre"
-              scope="col"
-              class="text-center"
-            >
-              {{ genre }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="genre in genres" :key="genre" @click="getMovies(genre)">
-            <td v-for="movie in filteredMovies" :key="movie">
-              {{ movie.title }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <button @click="showMore" type="button" class="btn btn-outline-success">
-        Show more
-      </button>
-      <button @click="showLess" type="button" class="btn btn-outline-danger">
-        Show less
-      </button>
-    </div>
-  </template>
+  <div>
+    <h1 class="display-6">Filmy wg gatunku</h1>
+    <ul v-for="(moviesByGenre, genre) in moviesGroupedByGenre" :key="genre">
+      <li class="h">{{ genre }}</li>
+      <ul class="list-group">
+        <li
+          v-for="movie in moviesByGenre"
+          :key="movie.id"
+          class="list-group-item w-25 text-start"
+        >
+          {{ movie.title }}
+        </li>
+      </ul>
+    </ul>
+  </div>
+</template>
 
-  <script>
-  export default {
-    props: ["movies"],
-    data() {
-      return {
-        m: 10,
-        genres_movies: {},
-      };
-    },
-    methods: {
-      showMore() {
-        this.m += 10;
-      },
-      showLess() {
-        this.m -= 10;
-      },
-      filterMovies() {
-        return movies.reduce((acc, movie) => {
-          movie.genres.forEach((genre) => {
-            if (!acc[genre]) {
-              acc[genre] = [];
-            }
-            acc[genre].push(movie);
-          });
-          return acc;
-        }, {});
-      },
-    },
-    mounted() {
-      this.genres_movies = this.filterMovies();
-    },
-  };
-  </script>
+<script>
+import _ from "underscore";
+
+export default {
+  props: ["movies"],
+  data() {
+    return {
+      moviesGroupedByGenre: {},
+      moviesShorten: {},
+    };
+  },
+  mounted() {
+    this.moviesShorten = this.movies.slice(0, 100);
+    const groupedMovies = _.groupBy(this.moviesShorten, (movie) =>
+      movie.genres.join(",")
+    );
+    for (const genre in groupedMovies) {
+      if (genre !== "") {
+        this.moviesGroupedByGenre[genre] = groupedMovies[genre];
+      }
+    }
+    console.log(this.moviesGroupedByGenre);
+  },
+};
+</script>
+
+<style scoped>
+* {
+  padding-top: 1%;
+}
+h1 {
+  margin-left: 1%;
+}
+ul {
+    list-style-type: none;
+}
+.h {
+  font-size: 1.5rem;
+}
+</style>
