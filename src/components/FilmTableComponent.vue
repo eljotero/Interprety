@@ -1,19 +1,19 @@
 <template>
-  <table class="table table-bordered">
+  <table class="table table-hover table-bordered">
     <thead>
-      <tr>
-        <th scope="col" class="text-center">Movie Title</th>
-        <th scope="col" class="text-center">Production Year</th>
-        <th scope="col" class="text-center">Cast</th>
-        <th scope="col" class="text-center">Genres</th>
+      <tr class>
+        <th scope="col" class="text-center w-25">Movie Title</th>
+        <th scope="col" class="text-center w-25">Production Year</th>
+        <th scope="col" class="text-center w-25">Cast</th>
+        <th scope="col" class="text-center w-25">Genres</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="movie in filteredMovies.slice(0, m)" :key="movie.id">
-        <td>{{ movie.title }}</td>
-        <td>{{ movie.year }}</td>
-        <td>{{ movie.cast.join(" ") }}</td>
-        <td>{{ movie.genres.join(" ") }}</td>
+        <td class>{{ movie.title }}</td>
+        <td class>{{ movie.year }}</td>
+        <td class>{{ movie.cast.join(" ") }}</td>
+        <td class>{{ movie.genres.join(" ") }}</td>
       </tr>
     </tbody>
   </table>
@@ -35,11 +35,24 @@ export default {
   },
   methods: {
     showMore() {
-      this.m += 10;
+      if (this.m < this.filteredMovies.length) {
+        this.m += 10;
+      }
     },
     showLess() {
-      this.m -= 10;
+      if (this.m >= 10) {
+        this.m -= 10;
+      }
     },
   },
 };
 </script>
+<style scoped>
+table tr {
+  text-align: center;
+}
+button {
+  margin-left: 1%;
+  margin-top: 1%;
+}
+</style>

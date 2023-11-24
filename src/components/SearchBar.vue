@@ -21,12 +21,12 @@
         class="form-control"
         id="year1"
       />
-      <span v-if="yearError1" class="text-danger"
-        >Rok spoza zakresu (1900-2019)!</span
-      >
-      <span v-if="yearsError" class="text-danger"
-        >Rok produkcji od musi byc mniejszy od roku produkcji do
-      </span>
+      <div class="alert alert-danger" role="alert" v-if="yearError1">
+        Rok spoza zakresu (1900-2019)!
+      </div>
+      <div class="alert alert-danger" role="alert" v-if="yearsError">
+        Rok produkcji od musi byc mniejszy od roku produkcji do
+      </div>
     </div>
     <div class="mb-1 w-25">
       <label for="year2" class="form-label">Rok produkcji do:</label>
@@ -38,12 +38,12 @@
         id="year2"
         class="form-control"
       />
-      <span v-if="yearError2" class="text-danger"
-        >Rok spoza zakresu (1900-2019)!</span
-      >
-      <span v-if="yearsError" class="text-danger"
-        >Rok produkcji od musi byc mniejszy od roku produkcji do
-      </span>
+      <div class="alert alert-danger" role="alert" v-if="yearError2">
+        Rok spoza zakresu (1900-2019)!
+      </div>
+      <div class="alert alert-danger" role="alert" v-if="yearsError">
+        Rok produkcji od musi byc mniejszy od roku produkcji do
+      </div>
     </div>
     <div class="mb-5 w-25">
       <label for="cast" class="form-label">Obsada</label>
