@@ -30,17 +30,16 @@ export default {
   mounted() {
     this.moviesShorten = _.filter(
       this.movies,
-      (movie) => movie.genres && movie.genres.length > 0
+      (movie) => movie.genres && movie.genres.length > 0 && movie.genres !== ""
     ).slice(0, 100);
-    const groupedMovies = _.groupBy(this.moviesShorten, (movie) =>
-      movie.genres.join(",")
-    );
-    for (const genre in groupedMovies) {
-      if (genre !== "") {
-        this.moviesGroupedByGenre[genre] = groupedMovies[genre];
-      }
-    }
-    console.log(this.moviesGroupedByGenre);
+    _.each(this.moviesShorten, (movie) => {
+      _.each(movie.genres, (genre) => {
+        if (!this.moviesGroupedByGenre[genre]) {
+          this.moviesGroupedByGenre[genre] = [];
+        }
+        this.moviesGroupedByGenre[genre].push(movie);
+      });
+    });
   },
 };
 </script>

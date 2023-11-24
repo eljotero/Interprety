@@ -30,17 +30,16 @@ export default {
   mounted() {
     this.moviesShorten = _.filter(
       this.movies,
-      (movie) => movie.cast && movie.cast.length > 0
+      (movie) => movie.cast && movie.cast.length > 0 && movie.cast !== ""
     ).slice(0, 100);
-    const groupedMovies = _.groupBy(this.moviesShorten, (movie) =>
-      movie.cast.join(",")
-    );
-    for (const cast in groupedMovies) {
-      if (cast !== "") {
-        this.moviesGroupedByCast[cast] = groupedMovies[cast];
-      }
-    }
-    console.log(this.moviesGroupedByCast);
+    _.each(this.moviesShorten, (movie) => {
+      _.each(movie.cast, (cast) => {
+        if (!this.moviesGroupedByCast[cast]) {
+          this.moviesGroupedByCast[cast] = [];
+        }
+        this.moviesGroupedByCast[cast].push(movie);
+      });
+    });
   },
 };
 </script>

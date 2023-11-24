@@ -114,6 +114,9 @@ export default {
       }
     },
   },
+  mounted() {
+    this.filteredMovies = this.movies;
+  },
 };
 </script>
 
