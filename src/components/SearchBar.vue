@@ -57,16 +57,16 @@
       />
     </div>
   </form>
-  <FilmTable :filteredMovies="filteredMovies" />
+  <MovieTable :filteredMovies="filteredMovies" />
 </template>
 
 <script>
-import FilmTable from "./FilmTable.vue";
+import MovieTable from "./MovieTable.vue";
 import _ from "underscore";
 export default {
   props: ["movies"],
   components: {
-    FilmTable,
+    MovieTable,
   },
   data() {
     return {
