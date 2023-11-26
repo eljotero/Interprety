@@ -1,4 +1,5 @@
 <template>
+  <p>Liczba wyświetlanych filmów: {{ counterOfSearchedMovies }}</p>
   <table class="table table-hover table-bordered">
     <thead>
       <tr class>
@@ -17,12 +18,24 @@
       </tr>
     </tbody>
   </table>
-  <button @click="showMore" type="button" class="btn btn-outline-success">
-    Show more
-  </button>
-  <button @click="showLess" type="button" class="btn btn-outline-danger">
-    Show less
-  </button>
+  <div class="buttons">
+    <button
+      @click="showMore"
+      v-if="showMoreVisibilty"
+      type="button"
+      class="btn btn-outline-success"
+    >
+      Show more
+    </button>
+    <button
+      @click="showLess"
+      v-if="showLessVisibilty"
+      type="button"
+      class="btn btn-outline-danger"
+    >
+      Show less
+    </button>
+  </div>
 </template>
 
 <script>
@@ -31,17 +44,41 @@ export default {
   data() {
     return {
       m: 10,
+      showLessVisibilty: true,
+      showMoreVisibilty: true,
+      counterOfSearchedMovies: 10,
     };
   },
   methods: {
     showMore() {
-      if (this.m < this.filteredMovies.length) {
+      if (this.m + 10 <= this.filteredMovies.length) {
         this.m += 10;
+      } else {
+        this.m = this.filteredMovies.length;
       }
     },
     showLess() {
       if (this.m >= 10) {
         this.m -= 10;
+      }
+    },
+  },
+  watch: {
+    m() {
+      if (this.m >= this.filteredMovies.length) {
+        this.showMoreVisibilty = false;
+        this.showLessVisibilty = true;
+      } else if (this.m < 10) {
+        this.showLessVisibilty = false;
+        this.showMoreVisibilty = true;
+      } else {
+        this.showLessVisibilty = true;
+        this.showMoreVisibilty = true;
+      }
+      if (this.m > this.filteredMovies.length) {
+        this.counterOfSearchedMovies = this.filteredMovies.length;
+      } else {
+        this.counterOfSearchedMovies = this.m;
       }
     },
   },
@@ -51,8 +88,20 @@ export default {
 table tr {
   text-align: center;
 }
-button {
+.buttons {
+  display: inline-block;
+  justify-content: space-between;
+  width: 50%;
   margin-left: 1%;
-  margin-top: 1%;
+  margin-bottom: 3%;
+}
+button {
+  width: 20%;
+  margin-left: 1%;
+  margin-right: 7%;
+}
+p {
+  margin-left: 1%;
+  font-size: 1.5rem;
 }
 </style>

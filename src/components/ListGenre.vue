@@ -7,7 +7,7 @@
         <li
           v-for="movie in moviesByGenre"
           :key="movie.id"
-          class="list-group-item w-25 text-start"
+          class="list-group-item w-25 text-center"
         >
           {{ movie.title }}
         </li>
@@ -39,6 +39,12 @@ export default {
         }
         this.moviesGroupedByGenre[genre].push(movie);
       });
+    });
+    Object.keys(this.moviesGroupedByGenre).forEach((key) => {
+      this.moviesGroupedByGenre[key] = _.sortBy(
+        this.moviesGroupedByGenre[key],
+        (movie) => movie.title
+      );
     });
   },
 };

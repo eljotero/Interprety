@@ -1,11 +1,11 @@
 <template>
+  <h1 class="display-5">Baza filmów</h1>
   <form>
     <div class="mb-1 w-25">
       <label for="title" class="form-label">Tytuł</label>
       <input
         type="text"
         v-model="searchTitle"
-        @input="searchMovie"
         placeholder="Podaj tytuł lub fragment tytułu filmu"
         id="title"
         class="form-control"
@@ -16,7 +16,6 @@
       <input
         type="number"
         v-model="searchYear1"
-        @input="searchMovie"
         placeholder="Liczba naturalna z przedziału 1900-2019"
         class="form-control"
         id="year1"
@@ -33,7 +32,6 @@
       <input
         type="number"
         v-model="searchYear2"
-        @input="searchMovie"
         placeholder="Liczba naturalna z przedziału 1900-2019"
         id="year2"
         class="form-control"
@@ -50,13 +48,20 @@
       <input
         type="text"
         v-model="castSearch"
-        @input="searchMovie"
         placeholder="Imię i nazwisko"
         id="cast"
         class="form-control"
       />
     </div>
   </form>
+  <div class="buttons">
+    <button @click="searchMovie" type="button" class="btn btn-outline-success">
+      Search
+    </button>
+    <button @click="clearMovies" type="button" class="btn btn-outline-danger">
+      Clear
+    </button>
+  </div>
   <MovieTable :filteredMovies="filteredMovies" />
 </template>
 
@@ -113,6 +118,13 @@ export default {
         this.filteredMovies = [];
       }
     },
+    clearMovies() {
+      this.searchTitle = "";
+      this.searchYear1 = 0;
+      this.searchYear2 = 0;
+      this.castSearch = "";
+      this.filteredMovies = this.movies;
+    },
   },
   mounted() {
     this.filteredMovies = this.movies;
@@ -121,8 +133,27 @@ export default {
 </script>
 
 <style scoped>
-form {
+h1 {
   margin-top: 1%;
   margin-left: 1%;
+}
+form {
+  margin-left: 1%;
+}
+.buttons {
+  display: inline-block;
+  justify-content: space-between;
+  width: 50%;
+  margin-left: 1%;
+  margin-bottom: 3%;
+}
+button {
+  width: 20%;
+  margin-left: 1%;
+  margin-right: 7%;
+}
+label {
+  margin-bottom: 3%;
+  margin-top: 3%;
 }
 </style>

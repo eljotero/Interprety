@@ -40,6 +40,12 @@ export default {
         this.moviesGroupedByCast[cast].push(movie);
       });
     });
+    Object.keys(this.moviesGroupedByCast).forEach((key) => {
+      this.moviesGroupedByCast[key] = _.sortBy(
+        this.moviesGroupedByCast[key],
+        (movie) => movie.title
+      );
+    });
   },
 };
 </script>
