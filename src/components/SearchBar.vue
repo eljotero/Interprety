@@ -23,9 +23,6 @@
       <div class="alert alert-danger" role="alert" v-if="yearError1">
         Rok spoza zakresu (1900-2019)!
       </div>
-      <div class="alert alert-danger" role="alert" v-if="yearsError">
-        Rok produkcji od musi byc mniejszy od roku produkcji do
-      </div>
     </div>
     <div class="mb-1 w-25">
       <label for="year2" class="form-label">Rok produkcji do:</label>
@@ -77,8 +74,8 @@ export default {
     return {
       searchTitle: "",
       filteredMovies: [],
-      searchYear1: 0,
-      searchYear2: 0,
+      searchYear1: "",
+      searchYear2: "",
       castSearch: "",
       yearError1: false,
       yearError2: false,
@@ -87,6 +84,8 @@ export default {
   },
   methods: {
     searchMovie() {
+      this.searchYear1 = parseInt(this.searchYear1);
+      this.searchYear2 = parseInt(this.searchYear2);
       const isYear1Invalid =
         this.searchYear1 !== 0 &&
         (this.searchYear1 > 2019 || this.searchYear1 < 1900);
@@ -120,10 +119,13 @@ export default {
     },
     clearMovies() {
       this.searchTitle = "";
-      this.searchYear1 = 0;
-      this.searchYear2 = 0;
+      this.searchYear1 = "";
+      this.searchYear2 = "";
       this.castSearch = "";
       this.filteredMovies = this.movies;
+      this.yearError1 = false;
+      this.yearError2 = false;
+      this.yearsError = false;
     },
   },
   mounted() {

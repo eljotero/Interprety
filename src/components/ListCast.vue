@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="display-6">Filmy wg obsady</h1>
+    <h1 class="display-5">Filmy wg obsady</h1>
     <ul v-for="(moviesByCast, cast) in moviesGroupedByCast" :key="cast">
       <li class="h">{{ cast }}</li>
       <ul class="list-group">
@@ -56,11 +56,16 @@ export default {
 }
 h1 {
   margin-left: 1%;
+  text-align: center;
 }
 ul {
   list-style-type: none;
 }
+ul, li {
+  align-items: center;
+}
 .h {
-  font-size: 1.5rem;
+  font-size: 2rem;
+  text-align: center;
 }
 </style>
