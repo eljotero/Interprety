@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import movies from "@/movies.json";
 export default {
   props: ["filteredMovies"],
   data() {
@@ -71,14 +72,29 @@ export default {
       } else if (this.m < 10) {
         this.showLessVisibilty = false;
         this.showMoreVisibilty = true;
+      } else if (this.m + 10 >= this.filteredMovies.length) {
+        this.showMoreVisibilty = false;
+        this.showLessVisibilty = true;
       } else {
         this.showLessVisibilty = true;
         this.showMoreVisibilty = true;
       }
       if (this.m > this.filteredMovies.length) {
         this.counterOfSearchedMovies = this.filteredMovies.length;
+      } else if (this.m === 0) {
+        this.counterOfSearchedMovies = 0;
       } else {
         this.counterOfSearchedMovies = this.m;
+      }
+    },
+    filteredMovies() {
+      if (this.m > this.filteredMovies.length) {
+        this.counterOfSearchedMovies = this.filteredMovies.length;
+      } else {
+        this.counterOfSearchedMovies = this.m;
+      }
+      if (this.filteredMovies.length === movies.length) {
+        this.m = 10;
       }
     },
   },
