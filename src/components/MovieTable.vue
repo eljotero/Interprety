@@ -1,5 +1,5 @@
 <template>
-  <p>Liczba wyświetlanych filmów: {{ counterOfSearchedMovies }}</p>
+  <p>Liczba wyświetlanych filmów: {{ m }}</p>
   <table class="table table-hover table-bordered">
     <thead>
       <tr class>
@@ -47,7 +47,6 @@ export default {
       m: 10,
       showLessVisibilty: true,
       showMoreVisibilty: true,
-      counterOfSearchedMovies: 10,
     };
   },
   methods: {
@@ -76,7 +75,6 @@ export default {
       if (this.m >= this.filteredMovies.length) {
         this.showMoreVisibilty = false;
         this.showLessVisibilty = true;
-        this.counterOfSearchedMovies = this.filteredMovies.length;
       } else if (this.m < 0) {
         this.showLessVisibilty = false;
         this.counterOfSearchedMovies = 0;
@@ -86,7 +84,6 @@ export default {
         this.showMoreVisibilty = true;
       }
       else {
-        this.counterOfSearchedMovies = this.m;
         this.showLessVisibilty = true;
         this.showMoreVisibilty = true;
       }
@@ -95,8 +92,6 @@ export default {
       if (this.filteredMovies.length < 10) {
         this.showMoreVisibilty = false;
         this.m = this.filteredMovies.length;
-      } else {
-        this.counterOfSearchedMovies = this.m;
       }
       if (this.filteredMovies.length === movies.length) {
         this.m = 10;
