@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="display-5">Filmy wg gatunku</h1>
+    <h1 class="display-4">Filmy wg gatunku</h1>
     <ul v-for="(moviesByGenre, genre) in moviesGroupedByGenre" :key="genre">
       <li class="h">{{ genre }}</li>
       <ul class="list-group">

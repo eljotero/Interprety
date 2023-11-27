@@ -99,7 +99,13 @@ export default {
       this.yearError1 = isYear1Invalid;
       this.yearError2 = isYear2Invalid;
       this.yearsError = areYearsInvalid;
-      if (this.movies && this.movies.length > 0) {
+      if (
+        this.movies &&
+        this.movies.length > 0 &&
+        !isYear1Invalid &&
+        !isYear2Invalid &&
+        !areYearsInvalid
+      ) {
         this.filteredMovies = _.filter(this.movies, (movie) => {
           const titleMatch = movie.title
             .toLowerCase()
@@ -114,7 +120,7 @@ export default {
           return titleMatch && yearMatch && castMatch;
         });
       } else {
-        this.filteredMovies = [];
+        this.filteredMovies = this.movies;
       }
     },
     clearMovies() {

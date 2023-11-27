@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="display-5">Filmy wg obsady</h1>
+    <h1 class="display-4">Filmy wg obsady</h1>
     <ul v-for="(moviesByCast, cast) in moviesGroupedByCast" :key="cast">
       <li class="h">{{ cast }}</li>
       <ul class="list-group">
@@ -18,7 +18,6 @@
 
 <script>
 import _ from "underscore";
-
 export default {
   props: ["movies"],
   data() {
@@ -61,7 +60,8 @@ h1 {
 ul {
   list-style-type: none;
 }
-ul, li {
+ul,
+li {
   align-items: center;
 }
 .h {

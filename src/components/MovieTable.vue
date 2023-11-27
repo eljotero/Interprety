@@ -13,8 +13,8 @@
       <tr v-for="movie in filteredMovies.slice(0, m)" :key="movie.id">
         <td class>{{ movie.title }}</td>
         <td class>{{ movie.year }}</td>
-        <td class>{{ movie.cast.join(" ") }}</td>
-        <td class>{{ movie.genres.join(" ") }}</td>
+        <td class>{{ movie.cast.join(",") }}</td>
+        <td class>{{ movie.genres.join(",") }}</td>
       </tr>
     </tbody>
   </table>
@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     showMore() {
-      if (this.m + 10 <= this.filteredMovies.length) {
+      if (this.filteredMovies.length - this.m > 10) {
         this.m += 10;
       } else {
         this.m = this.filteredMovies.length;
@@ -61,6 +61,13 @@ export default {
     showLess() {
       if (this.m >= 10) {
         this.m -= 10;
+      } else if (
+        this.m > 0 && this.m < 10
+      ) {
+        this.m -= this.m;
+      } else if (this.filteredMovies.length === 1) {
+        this.m = 0;
+        this.showMoreVisibilty = true;
       }
     },
   },
@@ -69,27 +76,25 @@ export default {
       if (this.m >= this.filteredMovies.length) {
         this.showMoreVisibilty = false;
         this.showLessVisibilty = true;
-      } else if (this.m < 10) {
+        this.counterOfSearchedMovies = this.filteredMovies.length;
+      } else if (this.m < 0) {
+        this.showLessVisibilty = false;
+        this.counterOfSearchedMovies = 0;
+        this.m = 0;
+      } else if(this.m == 0) {
         this.showLessVisibilty = false;
         this.showMoreVisibilty = true;
-      } else if (this.m + 10 >= this.filteredMovies.length) {
-        this.showMoreVisibilty = false;
-        this.showLessVisibilty = true;
-      } else {
+      }
+      else {
+        this.counterOfSearchedMovies = this.m;
         this.showLessVisibilty = true;
         this.showMoreVisibilty = true;
-      }
-      if (this.m > this.filteredMovies.length) {
-        this.counterOfSearchedMovies = this.filteredMovies.length;
-      } else if (this.m === 0) {
-        this.counterOfSearchedMovies = 0;
-      } else {
-        this.counterOfSearchedMovies = this.m;
       }
     },
     filteredMovies() {
-      if (this.m > this.filteredMovies.length) {
-        this.counterOfSearchedMovies = this.filteredMovies.length;
+      if (this.filteredMovies.length < 10) {
+        this.showMoreVisibilty = false;
+        this.m = this.filteredMovies.length;
       } else {
         this.counterOfSearchedMovies = this.m;
       }
