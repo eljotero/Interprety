@@ -3,21 +3,21 @@ import * as bodyParser from "body-parser"
 import { Request, Response, Express } from "express"
 import { AppDataSource } from "./data-source"
 import { Routes } from "./routes"
-import { User } from "./entity/User"
+import { cors } from 'cors';
 
 AppDataSource.initialize().then(async () => {
 
     const app: Express = express()
     app.use(bodyParser.json())
+    app.use(cors);
 
     Routes.forEach(route => {
-        (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {
-            const result = (new (route.controller as any))[route.action](req, res, next)
-            if (result instanceof Promise) {
-                result.then(result => result !== null && result !== undefined ? res.send(result) : undefined)
-
-            } else if (result !== null && result !== undefined) {
-                res.json(result)
+        (app as any)[route.method](route.route, async (req: Request, res: Response, next: Function) => {
+            try {
+                const result = await (new (route.controller as any))[route.action](req, res, next);
+                res.json(result);
+            } catch (error) {
+                next(error);
             }
         })
     })
