@@ -3,7 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 export enum OrderStatusEnum {
     UNAPPROVED = "unapproved",
     APPROVED = "approved",
-    CANCLED = "cancled",
+    CANCLED = "canceled",
     DELIVERED = "delivered"
 }
 

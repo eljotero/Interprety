@@ -11,13 +11,13 @@ export class Order {
     @Column({ nullable: true })
     date: Date
 
-    @Column()
+    @Column({ type: 'varchar', length: 50 })
     userName: string
 
-    @Column()
+    @Column({ type: 'varchar', length: 50 })
     userEmail: string
 
-    @Column()
+    @Column({ type: 'varchar', length: 9})
     userPhone: string
 
     @ManyToOne(() => OrderStatus, (orderStatus) => orderStatus.status)

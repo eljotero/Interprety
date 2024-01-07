@@ -6,11 +6,11 @@ export class ProductController {
 
     private productRepository = AppDataSource.getRepository(Product)
 
-    async all(request: Request, response: Response, next: NextFunction) {
+    async getAllProducts(request: Request, response: Response, next: NextFunction) {
         return this.productRepository.find()
     }
 
-    async one(request: Request, response: Response, next: NextFunction) {
+    async getProduct(request: Request, response: Response, next: NextFunction) {
         const id = parseInt(request.params.id)
 
 
@@ -24,7 +24,7 @@ export class ProductController {
         return product
     }
 
-    async save(request: Request, response: Response, next: NextFunction) {
+    async addProduct(request: Request, response: Response, next: NextFunction) {
         const { name, description, price, weight } = request.body;
 
         const product = Object.assign(new Product(), {
@@ -34,7 +34,7 @@ export class ProductController {
         return this.productRepository.save(product)
     }
 
-    async update(request: Request, response: Response, next: NextFunction) {
+    async updateProduct(request: Request, response: Response, next: NextFunction) {
         const id = parseInt(request.params.id)
 
         const { name, description, price, weight } = request.body;

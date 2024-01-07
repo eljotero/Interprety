@@ -3,9 +3,9 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
 @Entity()
 export class Category {
 
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ type: 'integer' })
     categoryId: number
 
-    @Column()
+    @Column({ type: 'varchar', length: 50 })
     name: string
 }

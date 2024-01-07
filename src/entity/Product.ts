@@ -8,16 +8,16 @@ export class Product {
     @PrimaryGeneratedColumn()
     productId: number
 
-    @Column()
+    @Column({ type: 'varchar', length: 100 })
     name: string
 
-    @Column()
+    @Column({ type: 'varchar', length: 255 })
     description: string
 
-    @Column()
+    @Column({ type: 'numeric' })
     price: number
 
-    @Column("decimal")
+    @Column({ type: 'numeric' })
     weight: number
 
     @ManyToOne(() => Category, category => category.categoryId)
