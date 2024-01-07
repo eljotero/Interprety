@@ -4,6 +4,7 @@ import { Category } from "./entity/Category"
 import { Product } from "./entity/Product"
 import { Order } from "./entity/Order"
 import { OrderStatus } from "./entity/OrderStatus"
+import { OrderedProduct } from "./entity/OrderedProduct"
 
 
 export const AppDataSource = new DataSource({
@@ -15,7 +16,7 @@ export const AppDataSource = new DataSource({
     database: "shop",
     synchronize: true,
     logging: false,
-    entities: [Category, Product, Order, OrderStatus],
+    entities: [Category, Product, Order, OrderStatus, OrderedProduct],
     migrations: [],
     subscribers: [],
 })

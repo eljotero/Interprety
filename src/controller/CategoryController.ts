@@ -10,4 +10,20 @@ export class CategoryController {
         return this.categoryRepository.find()
     }
 
+    async getCategoryById(request: Request, response: Response, next: NextFunction) {
+        const id = parseInt(request.params.id);
+        return this.categoryRepository.find({
+            where: {
+                categoryId: id
+            }
+        })
+    }
+
+    async addCategory(request: Request, response: Response, next: NextFunction) {
+        const categoryName = request.body.name;
+        const newCategory = new Category();
+        newCategory.name = categoryName;
+        return this.categoryRepository.save(newCategory);
+    }
+
 }
