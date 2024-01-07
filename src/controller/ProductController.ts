@@ -12,23 +12,21 @@ export class ProductController {
 
     async getProduct(request: Request, response: Response, next: NextFunction) {
         const id = parseInt(request.params.id)
-
+        console.log(id);
 
         const product = await this.productRepository.findOne({
             where: { productId: id }
         })
+        console.log(product);
 
-        if (!product) {
-            return "no such product"
-        }
         return product
     }
 
     async addProduct(request: Request, response: Response, next: NextFunction) {
-        const { name, description, price, weight } = request.body;
+        const { name, description, price, weight, categoryId } = request.body;
 
         const product = Object.assign(new Product(), {
-            name, description, price, weight
+            name, description, price, weight, categoryId
         })
 
         return this.productRepository.save(product)
