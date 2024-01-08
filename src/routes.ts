@@ -77,4 +77,5 @@ export const Routes = [
         controller: OrderController,
         action: "updateOrder",
         validation: []
-    }]
+    }
+]

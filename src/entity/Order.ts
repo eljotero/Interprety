@@ -9,7 +9,7 @@ export class Order {
     orderId: number
 
     @Column({ nullable: true })
-    date: Date
+    orderDate: Date
 
     @Column({ type: 'varchar', length: 50 })
     userName: string

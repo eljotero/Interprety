@@ -8,4 +8,5 @@ export class OrderStatusController {
     async getAllOrderStatus(request: Request, response: Response, next: NextFunction) {
         return this.orderStatusRepository.find();
     }
+
 }

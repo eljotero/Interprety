@@ -58,4 +58,14 @@ export class OrderController {
             where: { orderStatus: OrderStatusEnum[status], orderId: parseInt(orderId) }
         })
     }
+
+    async addOrder(request: Request, response: Response, next: NextFunction) {
+        const { userName, userEmail, orderStatus, orderDate, userPhone, orderedProducts } = request.body;
+
+        const order = Object.assign(new Order(), {
+            orderDate, userName, userEmail, userPhone, orderStatus, orderedProducts
+        });
+
+        return this.orderRepository.save(order)
+    }
 }
