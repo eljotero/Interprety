@@ -1,7 +1,7 @@
 import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { Order } from "../entity/Order"
-import { OrderStatusEnum } from "../entity/OrderStatus"
+import { Equal } from "typeorm";
 
 export class OrderController {
 
@@ -53,7 +53,7 @@ export class OrderController {
     async getOrdersByState(request: Request, response: Response, next: NextFunction) {
         const { status } = request.params;
         return this.orderRepository.find({
-            where: { orderStatus: parseInt(status)}
+            where: { orderStatus: Equal(status) }
         })
     }
 
