@@ -82,5 +82,10 @@ export const Routes = [
         route: "/orders/:id",
         controller: OrderController,
         action: "getOrderById"
+    }, {
+        method: "post",
+        route: "/orderStatus/:id",
+        controller: OrderStatusController,
+        action: "createOrderStatus",
     }
 ]

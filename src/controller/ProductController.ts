@@ -1,10 +1,12 @@
 import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { Product } from "../entity/Product"
+import { Category } from "../entity/Category"
 
 export class ProductController {
 
     private productRepository = AppDataSource.getRepository(Product)
+    private categoryRepository = AppDataSource.getRepository(Category)
 
     async getAllProducts(request: Request, response: Response, next: NextFunction) {
         return this.productRepository.find()
@@ -24,9 +26,12 @@ export class ProductController {
 
     async addProduct(request: Request, response: Response, next: NextFunction) {
         const { name, description, price, weight, categoryId } = request.body;
+        const newCategory = await this.categoryRepository.findOne({
+            where: { categoryId: parseInt(categoryId) }
+        })
 
         const product = Object.assign(new Product(), {
-            name, description, price, weight, categoryId
+            name, description, price, weight, category: newCategory
         })
 
         return this.productRepository.save(product)

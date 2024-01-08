@@ -17,10 +17,10 @@ export class Order {
     @Column({ type: 'varchar', length: 50 })
     userEmail: string
 
-    @Column({ type: 'varchar', length: 9})
+    @Column({ type: 'varchar', length: 9 })
     userPhone: string
 
-    @ManyToOne(() => OrderStatus, (orderStatus) => orderStatus.status)
+    @ManyToOne(() => OrderStatus, orderStatus => orderStatus.orders)
     orderStatus: OrderStatus;
 
     @OneToMany(() => OrderedProduct, orderedProduct => orderedProduct.order)

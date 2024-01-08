@@ -1,11 +1,13 @@
 import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { Order } from "../entity/Order"
+import { OrderStatus } from "../entity/OrderStatus"
 import { OrderStatusEnum } from "../entity/OrderStatus"
 
 export class OrderController {
 
     private orderRepository = AppDataSource.getRepository(Order)
+    private orderStatusRepository = AppDataSource.getRepository(OrderStatus);
 
 
     async getAllOrders(request: Request, response: Response, next: NextFunction) {
@@ -51,17 +53,17 @@ export class OrderController {
     }
 
     async getOrdersByState(request: Request, response: Response, next: NextFunction) {
-        const { status } = request.params;
-        return this.orderRepository.find({
-            where: { orderStatus: parseInt(status)}
-        })
+        const status: OrderStatusEnum = OrderStatusEnum[request.params.status];
+        const orderStatus = await this.orderStatusRepository.findOne({ where: { status } });
+        return this.orderRepository.find({ where: { orderStatus } });
     }
 
     async addOrder(request: Request, response: Response, next: NextFunction) {
         const { userName, userEmail, orderStatus, orderDate, userPhone, orderedProducts } = request.body;
-
+        console.log(orderStatus);
+        const newStatusEnum: OrderStatusEnum = OrderStatusEnum[`${orderStatus.toUpperCase()}`];
         const order = Object.assign(new Order(), {
-            orderDate, userName, userEmail, userPhone, orderStatus, orderedProducts
+            orderDate, userName, userEmail, userPhone, orderStatus: newStatusEnum, orderedProducts
         });
 
         return this.orderRepository.save(order)

@@ -1,9 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
-
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
+import { Order } from "./Order"
 export enum OrderStatusEnum {
     UNAPPROVED = "unapproved",
     APPROVED = "approved",
-    CANCLED = "canceled",
+    CANCELED = "canceled",
     DELIVERED = "delivered"
 }
 
@@ -19,4 +19,7 @@ export class OrderStatus {
         default: OrderStatusEnum.UNAPPROVED
     })
     status: OrderStatusEnum;
+
+    @OneToMany(() => Order, order => order.orderStatus)
+    orders: Order[];
 }
