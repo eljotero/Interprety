@@ -12,7 +12,7 @@ export const Routes = [
         validation: []
     }, {
         method: "get",
-        route: "categories/:id",
+        route: "/categories/:id",
         controller: CategoryController,
         action: "getCategoryById",
         validation: []
@@ -61,7 +61,7 @@ export const Routes = [
         validation: []
     }, {
         method: "get",
-        route: "/orders/:status/:orderId",
+        route: "/orders/status/:status",
         controller: OrderController,
         action: "getOrdersByState",
         validation: []
@@ -77,5 +77,10 @@ export const Routes = [
         controller: OrderController,
         action: "updateOrder",
         validation: []
+    }, {
+        method: "get",
+        route: "/orders/:id",
+        controller: OrderController,
+        action: "getOrderById"
     }
 ]

@@ -20,9 +20,8 @@ export class OrderController {
     }
 
     async getOrderById(request: Request, response: Response, next: NextFunction) {
-        const { id } = request.params;
         return this.orderRepository.find({
-            where: { orderId: parseInt(id) }
+            where: { orderId: parseInt(request.params.id) }
         })
     };
 
@@ -53,9 +52,8 @@ export class OrderController {
 
     async getOrdersByState(request: Request, response: Response, next: NextFunction) {
         const { status } = request.params;
-        const { orderId } = request.params;
         return this.orderRepository.find({
-            where: { orderStatus: OrderStatusEnum[status], orderId: parseInt(orderId) }
+            where: { orderStatus: parseInt(status)}
         })
     }
 
