@@ -5,6 +5,13 @@
                 {{ category.name }}
             </button>
         </nav>
+        <label for="search">Search: </label>
+        <input id="search" type="text" v-model="search">
+        <button @click="search = ''">Search</button>
+
+        <button id="cartModal" @click="openCartModal">Show Cart</button>
+        <CartComponent ref="cartComponent"/>
+
         <table class="table">
             <thead>
                 <tr>
@@ -20,15 +27,19 @@
                     <td>{{ product.description }}</td>
                     <td>{{ product.price }}</td>
                     <td>{{ product.weight }}</td>
+                    <div>
+                        <button @click="addToCart(product)">Add to cart</button>
+                    </div>
                 </tr>
             </tbody>
         </table>
+
     </div>
 </template>
 
 <script>
   import axios from 'axios';
-  
+  import CartComponent from '../components/CartComponent.vue'
   export default {
     data() {
       return {
@@ -47,9 +58,18 @@
     }
     },
     methods: {
-
+        addToCart(product) {
+            this.$refs.cartComponent.addToCart(product);
+        },
+        openCartModal() {
+            this.$refs.cartComponent.showModal = !this.$refs.cartComponent.showModal;
+        }
+    },
+    components: {
+        CartComponent
     }
-  }
+    }
+  
   </script>
 
 <style scoped>
@@ -71,7 +91,11 @@
     border: none;
     background: none;
 }
-
+#cartModal {  
+    float : right;
+    background-color: rgb(46, 151, 155);
+    text-align: center;
+}
 .table {
     width: 100%;
     border-collapse: collapse;
