@@ -8,15 +8,10 @@ const routes = [
         component: () => import("../views/ShopView.vue")
     },
     {
-        path: "/addCategory",
-        name: "AddCategory",
-        component: () => import("../views/AddCategoryView.vue")
+        path: "/manager",
+        name: "Manager",
+        component: () => import("../views/ManagerView.vue")
     },
-    {
-        path: "/addProduct",
-        name: "AddProduct",
-        component: () => import("../views/AddProductView.vue")
-    }
 ];
 
 const router = createRouter({

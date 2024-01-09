@@ -34,6 +34,9 @@ export class ProductController {
         const category = await this.categoryRepository.findOne({
             where: { categoryId: categoryId}
         })
+        if (!category) {
+            return "no such category"
+        }
         product.category = category;
         return this.productRepository.save(product)
     }

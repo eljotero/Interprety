@@ -2,19 +2,19 @@
     <div>
       <h1>Dodaj nowy produkt</h1>
       <form @submit.prevent="addProduct">
-        <label for="productName">Nazwa produktu:</label>
+        <label for="productName">Nazwa produktu: </label>
         <input id="productName" v-model="productName" required>
   
-        <label for="productDescription">Opis produktu:</label>
+        <label for="productDescription">Opis produktu: </label>
         <input id="productDescription" v-model="productDescription" required>
   
-        <label for="productPrice">Cena produktu:</label>
+        <label for="productPrice">Cena produktu: </label>
         <input id="productPrice" v-model="productPrice" required>
   
-        <label for="productWeight">Waga produktu:</label>
+        <label for="productWeight">Waga produktu: </label>
         <input id="productWeight" v-model="productWeight" required>
   
-        <label for="productCategory">Kategoria produktu:</label>
+        <label for="productCategory">Kategoria produktu: </label>
         <select id="productCategory" v-model="productCategory" required>
             <option v-for="category in categories" :key="category.id" :value="category.categoryId">
             {{ category.name }}

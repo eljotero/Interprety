@@ -2,7 +2,7 @@
     <div>
       <h1>Dodaj nową kategorię</h1>
       <form @submit.prevent="addCategory">
-        <label for="categoryName">Nazwa kategorii:</label>
+        <label for="categoryName">Nazwa kategorii: </label>
         <input id="categoryName" v-model="categoryName" required>
   
         <button type="submit">Dodaj</button>
