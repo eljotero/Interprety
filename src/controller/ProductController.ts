@@ -1,15 +1,19 @@
 import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { Product } from "../entity/Product"
-import { Category } from "../entity/Category"
+import { CategoryController } from "./CategoryController"
 
 export class ProductController {
 
     private productRepository = AppDataSource.getRepository(Product)
-    private categoryRepository = AppDataSource.getRepository(Category)
+    private categoryController = new CategoryController()
 
     async getAllProducts(request: Request, response: Response, next: NextFunction) {
-        return this.productRepository.find()
+        return this.productRepository.find({
+            relations: {
+                category: true
+            }
+        })
     }
 
     async getProduct(request: Request, response: Response, next: NextFunction) {
@@ -17,23 +21,21 @@ export class ProductController {
         console.log(id);
 
         const product = await this.productRepository.findOne({
-            where: { productId: id }
+            where: { productId: id },
+            relations: {
+                category: true
+            }
         })
-        console.log(product);
 
         return product
     }
 
     async addProduct(request: Request, response: Response, next: NextFunction) {
         const { name, description, price, weight, categoryId } = request.body;
-        const newCategory = await this.categoryRepository.findOne({
-            where: { categoryId: parseInt(categoryId) }
-        })
-
+        const newCategory = await this.categoryController.findCategory(categoryId);
         const product = Object.assign(new Product(), {
             name, description, price, weight, category: newCategory
         })
-
         return this.productRepository.save(product)
     }
 
@@ -53,5 +55,12 @@ export class ProductController {
         }
         return "product updated"
     }
+
+    async findProduct(id: number) {
+        return this.productRepository.findOne({
+            where: { productId: id }
+        })
+    }
+
 
 }

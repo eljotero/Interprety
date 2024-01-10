@@ -2,16 +2,24 @@ import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { Order } from "../entity/Order"
 import { OrderStatus } from "../entity/OrderStatus"
-import { OrderStatusEnum } from "../entity/OrderStatus"
+import { OrderedProduct } from "../entity/OrderedProduct"
+import { OrderStatusController } from "./OrderStatusController"
+import { ProductController } from "./ProductController"
 
 export class OrderController {
 
     private orderRepository = AppDataSource.getRepository(Order)
-    private orderStatusRepository = AppDataSource.getRepository(OrderStatus);
-
+    private orderedProductRepository = AppDataSource.getRepository(OrderedProduct);
+    private orderStatusController = new OrderStatusController();
+    private productController = new ProductController();
 
     async getAllOrders(request: Request, response: Response, next: NextFunction) {
-        return this.orderRepository.find()
+        return this.orderRepository.find({
+            relations: {
+                orderStatus: true,
+                orderedProducts: true
+            }
+        })
     }
 
     async getOneOrder(request: Request, response: Response, next: NextFunction) {
@@ -23,6 +31,7 @@ export class OrderController {
 
     async getOrderById(request: Request, response: Response, next: NextFunction) {
         return this.orderRepository.find({
+            relations: { orderedProducts: true },
             where: { orderId: parseInt(request.params.id) }
         })
     };
@@ -53,19 +62,29 @@ export class OrderController {
     }
 
     async getOrdersByState(request: Request, response: Response, next: NextFunction) {
-        const status: OrderStatusEnum = OrderStatusEnum[request.params.status];
-        const orderStatus = await this.orderStatusRepository.findOne({ where: { status } });
+        const orderStatus = await this.orderStatusController.getStatus(parseInt(request.params.status));
         return this.orderRepository.find({ where: { orderStatus } });
     }
 
+
     async addOrder(request: Request, response: Response, next: NextFunction) {
         const { userName, userEmail, orderStatus, orderDate, userPhone, orderedProducts } = request.body;
-        console.log(orderStatus);
-        const newStatusEnum: OrderStatusEnum = OrderStatusEnum[`${orderStatus.toUpperCase()}`];
+        const newStatus: OrderStatus = await this.orderStatusController.getStatus(parseInt(orderStatus));
         const order = Object.assign(new Order(), {
-            orderDate, userName, userEmail, userPhone, orderStatus: newStatusEnum, orderedProducts
+            orderDate, userName, userEmail, userPhone, orderStatus: newStatus, orderedProducts
         });
-
-        return this.orderRepository.save(order)
+        const savedOrder = await this.orderRepository.save(order);
+        for (const orderedProductData of orderedProducts) {
+            const { productId, quantity } = orderedProductData;
+            const product = await this.productController.findProduct(productId);
+            if (product) {
+                const orderedProduct = new OrderedProduct();
+                orderedProduct.quantity = quantity;
+                orderedProduct.product = product;
+                orderedProduct.order = savedOrder;
+                await this.orderedProductRepository.save(orderedProduct);
+            }
+        }
+        return savedOrder;
     }
 }

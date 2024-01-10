@@ -17,4 +17,8 @@ export class OrderStatusController {
         return this.orderStatusRepository.save(orderStatus);
     }
 
+    async getStatus(statusId: number) {
+        return await this.orderStatusRepository.findOne({ where: { orderStatusId: statusId } });
+    }
+
 }

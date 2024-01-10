@@ -26,4 +26,12 @@ export class CategoryController {
         return this.categoryRepository.save(newCategory);
     }
 
+    async findCategory(id: number) {
+        return this.categoryRepository.findOne({
+            where: {
+                categoryId: id
+            }
+        })
+    }
+
 }
