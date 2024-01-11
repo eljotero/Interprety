@@ -82,9 +82,9 @@
                 return product.name.toLowerCase().includes(this.search.toLowerCase) || product.description.toLowerCase().includes(this.search.toLowerCase());
         });
     },
+    },
     components: {
         CartComponent
-    }
     }
 }
   </script>
