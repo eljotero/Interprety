@@ -5,12 +5,13 @@
                 {{ category.name }}
             </button>
         </nav>
-        <label for="search">Search: </label>
-        <input id="search" type="text" v-model="search">
-        <button @click="search = ''">Search</button>
-
-        <button id="cartModal" @click="openCartModal">Show Cart</button>
-        <CartComponent ref="cartComponent"/>
+        <div class="subNav">
+            <label for="search">Search: </label>
+            <input id="search" type="text" v-model="search">
+            <button @click="search = ''">Search</button>
+            <button id="cartModal" @click="openCartModal">Show Cart</button>
+            <CartComponent ref="cartComponent"/>
+        </div>
 
         <table class="table">
             <thead>
@@ -19,6 +20,7 @@
                     <th>Description</th>
                     <th>Price</th>
                     <th>Weight</th>
+                    <th>Quantity</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,8 +29,10 @@
                     <td>{{ product.description }}</td>
                     <td>{{ product.price }}</td>
                     <td>{{ product.weight }}</td>
-                    <div>
-                        <button @click="addToCart(product)">Add to cart</button>
+                    <td> <input id="quantity" type="number" v-model="product.quantity" min = 1>
+                    </td>
+                    <div class="buttonContainer">
+                        <button @click="addToCart(product, product.quantity)">Add to cart</button>
                     </div>
                 </tr>
             </tbody>
@@ -39,6 +43,7 @@
 
 <script>
   import axios from 'axios';
+  import Notiflix from 'notiflix';
   import CartComponent from '../components/CartComponent.vue'
   export default {
     data() {
@@ -58,8 +63,13 @@
     }
     },
     methods: {
-        addToCart(product) {
-            this.$refs.cartComponent.addToCart(product);
+        addToCart(product, quantity) {
+            if (!product || !quantity) {
+                Notiflix.Notify.failure('Please select correct quantity');
+                return;
+            }
+            this.$refs.cartComponent.addToCart(product, quantity);
+            Notiflix.Notify.success('Product added to cart');
         },
         openCartModal() {
             this.$refs.cartComponent.showModal = !this.$refs.cartComponent.showModal;
@@ -77,12 +87,18 @@
     width: 80%;
     margin: auto;
 }
-
+.search {
+    display: flex;
+    margin-bottom: 2%;
+}
+input {
+    background-color: #FAE8E0;
+}
 .categories {
     display: flex;
     justify-content: space-around;
     margin-bottom: 20px;
-    background-color: rgb(46, 151, 155);
+    background-color: #D8A7B1;
     width: 100%;
 }
 
@@ -93,20 +109,25 @@
 }
 #cartModal {  
     float : right;
-    background-color: rgb(46, 151, 155);
+    background-color: #EF7C8E;
     text-align: center;
 }
 .table {
-    width: 100%;
-    border-collapse: collapse;
+    width: 60%;
+    margin: auto;
+    align-items: center;
 }
 
 .table th, .table td {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #EF7C8E;
 }
 
 .table th {
-    background-color: #f2f2f2;
+    background-color: #FAE8E0;
+}
+.buttonContainer {
+    margin-left: 5%;
+    margin-top: 10%;
 }
 </style>

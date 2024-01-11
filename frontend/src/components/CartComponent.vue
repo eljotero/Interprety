@@ -2,8 +2,24 @@
     <div v-if="showModal" class="modal-backdrop">
       <div id="showModal">
         <button type="button" class = "btn btn-danger" id="closeModal" @click="showModal = false">X</button>
-        <h3>Modal Title</h3>
-        <p>Modal content goes here...</p>
+        <table class="table">
+            <thead class = "thead">
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(product, index) in cart" :key="index">
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td> <button @click="removeFromCart(product)">Remove</button></td> 
+                </tr>
+            </tbody>
+        </table>
+        <label for="total">Total: {{ this.evaluateTotal() }}</label>
       </div>
     </div>
 </template>
@@ -15,6 +31,30 @@ export default {
             cart: [],
             showModal: false
         }
+    },
+    methods: {
+        addToCart(product, q) {
+            const productIndex = this.cart.findIndex(item => item.name === product.name);
+            console.log(q);
+            if (productIndex === -1) {
+                this.cart.push({
+                    ...product,
+                    quantity: q
+                });
+            } else {
+                this.cart[productIndex].quantity += q;
+            }
+        },
+        removeFromCart(product) {
+            const productIndex = this.cart.findIndex(item => item.id === product.id);
+            if (productIndex !== -1) {
+                this.cart.splice(productIndex, 1);
+            }
+        }, 
+        evaluateTotal() {
+            return this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        }
+
     }
 }
 </script>
@@ -23,14 +63,14 @@ export default {
 
 #showModal {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 40%;
+    left: 40%;
+    width: 20%;
+    height: 20%;
     z-index: 1000;
-    background-color: rgb(46, 151, 155);
+    background-color: #FAE8E0;
     border: none;
-    padding: 15%;
-    text-align: center;
+    border-radius: 10px;
 }
 #closeModal {
     position: absolute;
@@ -41,12 +81,20 @@ export default {
     text-align: center;
 }
 .modal-backdrop {
-    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
+}
+.table {
+    position: relative;
+    top : 10%;
+    width: 100%;
+    height: 100%;
+}
+.table-class td {
+    vertical-align: top;
 }
 </style>
