@@ -9,7 +9,8 @@ AppDataSource.initialize().then(async () => {
 
     const app = express()
     app.use(bodyParser.json())
-    app.use(morgan('tiny'));
+    app.use(bodyParser.urlencoded({ extended: true }))
+    app.use(morgan('tiny'))
 
     Routes.forEach(route => {
         (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {

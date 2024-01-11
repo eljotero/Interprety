@@ -5,6 +5,12 @@ import { OrderStatus } from "../entity/OrderStatus"
 import { OrderedProduct } from "../entity/OrderedProduct"
 import { OrderStatusController } from "./OrderStatusController"
 import { ProductController } from "./ProductController"
+import {
+    ReasonPhrases,
+    StatusCodes,
+    getReasonPhrase,
+    getStatusCode,
+} from 'http-status-codes';
 
 export class OrderController {
 
@@ -24,16 +30,30 @@ export class OrderController {
 
     async getOneOrder(request: Request, response: Response, next: NextFunction) {
         const { userName } = request.params;
-        return this.orderRepository.find({
+        const order = this.orderRepository.find({
             where: { userName: userName }
-        })
+        });
+        if (!order) {
+            response.status(StatusCodes.NOT_FOUND).json({
+                message: getReasonPhrase(StatusCodes.NOT_FOUND)
+            })
+        } else {
+            response.status(StatusCodes.OK).json({ order });
+        }
     }
 
     async getOrderById(request: Request, response: Response, next: NextFunction) {
-        return this.orderRepository.find({
+        const order = this.orderRepository.find({
             relations: { orderedProducts: true },
             where: { orderId: parseInt(request.params.id) }
         })
+        if (!order) {
+            response.status(StatusCodes.NOT_FOUND).json({
+                message: getReasonPhrase(StatusCodes.NOT_FOUND)
+            })
+        } else {
+            response.status(StatusCodes.OK).json({ order });
+        }
     };
 
     async changeOrderStatus(request: Request, response: Response, next: NextFunction) {

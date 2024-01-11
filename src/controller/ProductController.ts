@@ -31,8 +31,8 @@ export class ProductController {
     }
 
     async addProduct(request: Request, response: Response, next: NextFunction) {
-        const { name, description, price, weight, categoryId } = request.body;
-        const newCategory = await this.categoryController.findCategory(categoryId);
+        const { name, description, price, weight, categoryName } = request.body;
+        const newCategory = await this.categoryController.findCategory(categoryName);
         const product = Object.assign(new Product(), {
             name, description, price, weight, category: newCategory
         })
