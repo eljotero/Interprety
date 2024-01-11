@@ -13,7 +13,14 @@ export class CategoryController {
     private categoryRepository = AppDataSource.getRepository(Category)
 
     async getAllCategories(request: Request, response: Response, next: NextFunction) {
-        return this.categoryRepository.find()
+        const categories: Category[] = await this.categoryRepository.find();
+        if (!categories) {
+            response.status(StatusCodes.NOT_FOUND).json({
+                message: getReasonPhrase(StatusCodes.NOT_FOUND)
+            })
+        } else {
+            response.status(StatusCodes.OK).json({ categories });
+        }
     }
 
     async getCategoryById(request: Request, response: Response, next: NextFunction) {
@@ -33,28 +40,30 @@ export class CategoryController {
     }
 
     async addCategory(request: Request, response: Response, next: NextFunction) {
-        const categoryName = request.body.name;
-        if (!categoryName) {
+        const categoryName: string = request.body.name;
+        if (!categoryName || categoryName.length === 0) {
             response.status(StatusCodes.BAD_REQUEST).json({
                 message: getReasonPhrase(StatusCodes.BAD_REQUEST)
-            })
+            });
+            return;
         }
-        if (!this.findCategory(categoryName)) {
+        const exisitingCategory: Category = await this.findCategory(categoryName);
+        if (!exisitingCategory) {
             const newCategory = new Category();
             newCategory.name = categoryName;
             this.categoryRepository.insert(newCategory);
             response.status(StatusCodes.CREATED).json({
                 message: getReasonPhrase(StatusCodes.CREATED)
-            })
+            });
         } else {
             response.status(StatusCodes.CONFLICT).json({
                 message: getReasonPhrase(StatusCodes.CONFLICT)
-            })
+            });
         }
     }
 
     async findCategory(categoryName: string) {
-        return this.categoryRepository.findOne({
+        return await this.categoryRepository.findOne({
             where: {
                 name: categoryName
             }
