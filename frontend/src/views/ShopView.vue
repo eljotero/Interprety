@@ -8,7 +8,6 @@
         <div class="subNav">
             <label for="search">Search: </label>
             <input id="search" type="text" v-model="search">
-            <button @click="search = ''">Search</button>
             <button id="cartModal" @click="openCartModal">Show Cart</button>
             <CartComponent ref="cartComponent"/>
         </div>
@@ -24,7 +23,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(product, index) in products" :key="index">
+                <tr v-for="(product, index) in filterProducts()" :key="index">
                     <td>{{ product.name }}</td>
                     <td>{{ product.description }}</td>
                     <td>{{ product.price }}</td>
@@ -48,6 +47,7 @@
   export default {
     data() {
       return {
+        search: '',
         products: [],
         categories: []
       }
@@ -73,13 +73,20 @@
         },
         openCartModal() {
             this.$refs.cartComponent.showModal = !this.$refs.cartComponent.showModal;
-        }
+        },
+        filterProducts() {
+            if (this.search === '')  {
+                return this.products;   
+            }
+            return this.products.filter(product => {
+                return product.name.toLowerCase().includes(this.search.toLowerCase) || product.description.toLowerCase().includes(this.search.toLowerCase());
+        });
     },
     components: {
         CartComponent
     }
     }
-  
+}
   </script>
 
 <style scoped>
@@ -87,12 +94,9 @@
     width: 80%;
     margin: auto;
 }
-.search {
-    display: flex;
+.subNav {
     margin-bottom: 2%;
-}
-input {
-    background-color: #FAE8E0;
+    width: 100%;
 }
 .categories {
     display: flex;
@@ -109,13 +113,15 @@ input {
 }
 #cartModal {  
     float : right;
-    background-color: #EF7C8E;
+    background-color: #D8A7B1;
     text-align: center;
+    border-radius: 10%;
 }
 .table {
     width: 60%;
     margin: auto;
     align-items: center;
+    border-collapse: collapse;
 }
 
 .table th, .table td {
@@ -123,7 +129,7 @@ input {
     border: 1px solid #EF7C8E;
 }
 
-.table th {
+.table th , input{
     background-color: #FAE8E0;
 }
 .buttonContainer {
