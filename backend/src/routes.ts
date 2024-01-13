@@ -8,79 +8,78 @@ export const Routes = [
         method: "post",
         route: "/categories",
         controller: CategoryController,
-        action: "addCategory",
-        validation: []
+        action: "addCategory"
+    },
+    {
+        method: "get",
+        route: "/categories",
+        controller: CategoryController,
+        action: "getAllCategories"
     }, {
         method: "get",
         route: "/categories/:id",
         controller: CategoryController,
-        action: "getCategoryById",
-        validation: []
+        action: "getCategoryById"
     }
     , {
         method: "get",
         route: "/products",
         controller: ProductController,
-        action: "getAllProducts",
-        validation: []
+        action: "getAllProducts"
     }, {
         method: "get",
         route: "/products/:id",
         controller: ProductController,
-        action: "getProduct",
-        validation: []
+        action: "getProduct"
     }, {
         method: "post",
         route: "/products",
         controller: ProductController,
-        action: "addProduct",
-        validation: []
+        action: "addProduct"
     }, {
         method: "put",
         route: "/products/:id",
         controller: ProductController,
-        action: "updateProduct",
-        validation: []
-    }, {
-        method: "get",
-        route: "/categories",
-        controller: CategoryController,
-        action: "getAllCategories",
-        validation: []
-    }, {
-        method: "get",
-        route: "/status",
-        controller: OrderStatusController,
-        action: "getAllOrderStatus",
-        validation: []
+        action: "updateProduct"
     }, {
         method: "get",
         route: "/orders",
         controller: OrderController,
-        action: "getAllOrders",
-        validation: []
+        action: "getAllOrders"
     }, {
         method: "get",
         route: "/orders/status/:status",
         controller: OrderController,
-        action: "getOrdersByState",
-        validation: []
+        action: "getOrdersByState"
     }, {
         method: "post",
         route: "/orders",
         controller: OrderController,
-        action: "addOrder",
-        validation: []
+        action: "addOrder"
     }, {
         method: "patch",
         route: "/orders/:id",
         controller: OrderController,
-        action: "updateOrder",
-        validation: []
+        action: "changeOrderStatus"
     }, {
         method: "get",
         route: "/orders/:id",
         controller: OrderController,
         action: "getOrderById"
+    }, {
+        method: "get",
+        route: "/orders/name/:userName",
+        controller: OrderController,
+        action: "getOrderByUserName"
+    }, {
+        method: "post",
+        route: "/orderStatus/:id",
+        controller: OrderStatusController,
+        action: "createOrderStatus",
+    }, {
+        method: "get",
+        route: "/status",
+        controller: OrderStatusController,
+        action: "getAllOrderStatus"
     }
 ]

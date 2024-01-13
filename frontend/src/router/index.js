@@ -12,6 +12,11 @@ const routes = [
         name: "Manager",
         component: () => import("../views/ManagerView.vue")
     },
+    {
+        path: "/checkout",
+        name: "Checkout",
+        component: () => import("../views/CheckoutView.vue"),
+    }
 ];
 
 const router = createRouter({

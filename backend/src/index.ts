@@ -3,19 +3,23 @@ import * as bodyParser from "body-parser"
 import { Request, Response } from "express"
 import { AppDataSource } from "./data-source"
 import { Routes } from "./routes"
+import * as morgan from "morgan"
+
 
 AppDataSource.initialize().then(async () => {
 
     const app = express()
-    const cors = require('cors');
+    const cors = require('cors')
     app.use(bodyParser.json())
-    app.use(cors());
+    app.use(bodyParser.urlencoded({ extended: true }))
+    app.use(morgan('tiny'))
+    app.use(cors())
+
 
     Routes.forEach(route => {
         (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {
             const controllerInstance = new (route.controller as any)();
             const action = route.action;
-            console.log(`Attempting to call action ${action} on controller ${route.controller.name}`);
             const result = controllerInstance[action](req, res, next);
             if (result instanceof Promise) {
                 result.then(result => result !== null && result !== undefined ? res.send(result) : undefined)
