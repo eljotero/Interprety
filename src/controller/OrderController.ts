@@ -27,39 +27,50 @@ interface OrderRequest {
 
 export class OrderController {
 
-    private orderRepository = AppDataSource.getRepository(Order)
-    private orderedProductRepository = AppDataSource.getRepository(OrderedProduct);
+    private orderRepository = AppDataSource.getRepository(Order);
     private orderStatusController = new OrderStatusController();
     private productController = new ProductController();
 
     async getAllOrders(request: Request, response: Response, next: NextFunction) {
-        const result: Order[] = await this.orderRepository.find({
-            relations: {
-                orderStatus: true,
-                orderedProducts: true
-            }
-        });
-        if (!result) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
+        try {
+            const result: Order[] = await this.orderRepository.find({
+                relations: {
+                    orderStatus: true,
+                    orderedProducts: true
+                }
             });
-        } else {
-            response.status(StatusCodes.OK).json({ result });
+            if (!result) {
+                response.status(StatusCodes.NOT_FOUND).json({
+                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                });
+            } else {
+                response.status(StatusCodes.OK).json({ result });
+            }
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+            });
         }
     }
 
     async getOrderByUserName(request: Request, response: Response, next: NextFunction) {
         const userName: string = request.params.userName;
-        const order: Order[] = await this.orderRepository.find({
-            relations: { orderedProducts: true, orderStatus: true },
-            where: { userName: userName }
-        });
-        if (!order) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
-            })
-        } else {
-            response.status(StatusCodes.OK).json({ order });
+        try {
+            const order: Order[] = await this.orderRepository.find({
+                relations: { orderedProducts: true, orderStatus: true },
+                where: { userName: userName }
+            });
+            if (!order) {
+                response.status(StatusCodes.NOT_FOUND).json({
+                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                });
+            } else {
+                response.status(StatusCodes.OK).json({ order });
+            }
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+            });
         }
     }
 
@@ -70,16 +81,22 @@ export class OrderController {
                 message: getReasonPhrase(StatusCodes.BAD_REQUEST)
             })
         }
-        const order: Order = await this.orderRepository.findOne({
-            relations: { orderedProducts: true, orderStatus: true },
-            where: { orderId: id }
-        });
-        if (!order) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
-            })
-        } else {
-            response.status(StatusCodes.OK).json({ order });
+        try {
+            const order: Order = await this.orderRepository.findOne({
+                relations: { orderedProducts: true, orderStatus: true },
+                where: { orderId: id }
+            });
+            if (!order) {
+                response.status(StatusCodes.NOT_FOUND).json({
+                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                })
+            } else {
+                response.status(StatusCodes.OK).json({ order });
+            }
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+            });
         }
     };
 
@@ -92,50 +109,82 @@ export class OrderController {
             });
             return;
         }
-        const order: Order = await this.orderRepository.findOne({
-            where: { orderId: id },
-            relations: { orderStatus: true }
-        });
-        if (!order) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
-            });
-            return;
-        }
-        const newOrderStatus: OrderStatus = await this.orderStatusController.getStatus(orderStatus);
-        if (!OrderController.validateOrderStatus(order.orderStatus.status, newOrderStatus)) {
-            response.status(StatusCodes.BAD_REQUEST).json({
-                message: getReasonPhrase(StatusCodes.BAD_REQUEST)
-            });
-            return;
-        }
-        await this.orderRepository.update({ orderId: id }, { orderStatus: newOrderStatus });
-        response.status(StatusCodes.OK).json({
-            message: getReasonPhrase(StatusCodes.OK)
-        });
+        await AppDataSource.manager.transaction(async (entityManager) => {
+            try {
+                const order: Order = await entityManager.findOne(Order, {
+                    where: { orderId: id },
+                    relations: { orderStatus: true }
+                });
+                if (!order) {
+                    response.status(StatusCodes.NOT_FOUND).json({
+                        message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                    });
+                    return;
+                }
+                try {
+                    const newOrderStatus: OrderStatus = await this.orderStatusController.getStatus(orderStatus);
+                    if (!OrderController.validateOrderStatus(order.orderStatus.status, newOrderStatus)) {
+                        response.status(StatusCodes.BAD_REQUEST).json({
+                            message: getReasonPhrase(StatusCodes.BAD_REQUEST)
+                        });
+                        return;
+                    }
+                    try {
+                        await entityManager.update(Order, { orderId: id }, { orderStatus: newOrderStatus });
+                        response.status(StatusCodes.OK).json({
+                            message: getReasonPhrase(StatusCodes.OK)
+                        });
+                    } catch (error) {
+                        response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                            message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                        });
+                    }
+                } catch (error) {
+                    response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                        message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                    });
+                }
+            } catch (error) {
+                response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                    message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                });
+            }
+        })
     }
 
     async getOrdersByState(request: Request, response: Response, next: NextFunction) {
-        const orderStatus: OrderStatus = await this.orderStatusController.getStatus(parseInt(request.params.status));
-        if (!orderStatus) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
-            });
-            return;
-        }
-        const result: Order[] = await this.orderRepository.find({
-            where: { orderStatus: orderStatus },
-            relations: {
-                orderStatus: true,
-                orderedProducts: true
+        try {
+            const orderStatus: OrderStatus = await this.orderStatusController.getStatus(parseInt(request.params.status));
+            if (!orderStatus) {
+                response.status(StatusCodes.NOT_FOUND).json({
+                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                });
+                return;
             }
-        });
-        if (!result) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
+            try {
+                const result: Order[] = await this.orderRepository.find({
+                    where: { orderStatus: orderStatus },
+                    relations: {
+                        orderStatus: true,
+                        orderedProducts: true
+                    }
+                });
+                if (!result) {
+                    response.status(StatusCodes.NOT_FOUND).json({
+                        message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                    });
+                } else {
+                    response.status(StatusCodes.OK).json({ result });
+                }
+            } catch (error) {
+                response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                    message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                });
+            }
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
             });
-        } else {
-            response.status(StatusCodes.OK).json({ result });
         }
     }
 
@@ -157,33 +206,65 @@ export class OrderController {
         if (orderReq.orderDate !== undefined) {
             orderDate = new Date(orderReq.orderDate);
         }
-        const newStatus: OrderStatus = await this.orderStatusController.getStatus(orderStatus);
-        if (!newStatus) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
-            });
-            return;
-        }
-        const order = Object.assign(new Order(), {
-            orderDate, userName, userEmail, userPhone, orderStatus: newStatus, orderedProducts
-        });
-        const savedOrder: Order = await this.orderRepository.save(order);
-        for (const orderedProductData of orderedProducts) {
-            const { productId, quantity } = orderedProductData;
-            const product: Product = await this.productController.findProduct(productId);
-            if (!product) {
+        try {
+            const newStatus: OrderStatus = await this.orderStatusController.getStatus(orderStatus);
+            if (!newStatus) {
                 response.status(StatusCodes.NOT_FOUND).json({
                     message: getReasonPhrase(StatusCodes.NOT_FOUND)
                 });
                 return;
             }
-            const orderedProduct = new OrderedProduct();
-            orderedProduct.quantity = quantity;
-            orderedProduct.product = product;
-            orderedProduct.order = savedOrder;
-            await this.orderedProductRepository.save(orderedProduct);
+            await AppDataSource.manager.transaction(async (entityManager) => {
+                const order = Object.assign(new Order(), {
+                    orderDate, userName, userEmail, userPhone, orderStatus: newStatus, orderedProducts
+                });
+                try {
+                    const savedOrder: Order = await entityManager.save(Order, order);
+                    for (const orderedProductData of orderedProducts) {
+                        const { productId, quantity } = orderedProductData;
+                        try {
+                            const product: Product = await this.productController.findProduct(productId);
+                            if (!product) {
+                                response.status(StatusCodes.NOT_FOUND).json({
+                                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                                });
+                                return;
+                            }
+                            else {
+                                const orderedProduct = new OrderedProduct();
+                                orderedProduct.quantity = quantity;
+                                orderedProduct.product = product;
+                                orderedProduct.order = savedOrder;
+                                try {
+                                    await entityManager.save(OrderedProduct, orderedProduct);
+                                } catch (error) {
+                                    response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                                        message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                                    });
+                                }
+                            }
+                        } catch (error) {
+                            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                            });
+                        }
+                    }
+                    response.status(StatusCodes.OK).json({
+                        savedOrder
+                    })
+                }
+                catch (error) {
+                    response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                        message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                    });
+                }
+            });
+
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+            });
         }
-        return savedOrder;
     }
     static validateOrder(order: OrderRequest): boolean {
         if (

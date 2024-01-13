@@ -24,34 +24,46 @@ export class ProductController {
     private categoryController = new CategoryController();
 
     async getAllProducts(request: Request, response: Response, next: NextFunction) {
-        const products: Product[] = await this.productRepository.find({
-            relations: {
-                category: true
-            }
-        });
-        if (!products) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
+        try {
+            const products: Product[] = await this.productRepository.find({
+                relations: {
+                    category: true
+                }
             });
-        } else {
-            response.status(StatusCodes.OK).json({ products });
+            if (!products) {
+                response.status(StatusCodes.NOT_FOUND).json({
+                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                });
+            } else {
+                response.status(StatusCodes.OK).json({ products });
+            }
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+            });
         }
     }
 
     async getProduct(request: Request, response: Response, next: NextFunction) {
         const id: number = parseInt(request.params.id);
-        const product: Product = await this.productRepository.findOne({
-            where: { productId: id },
-            relations: {
-                category: true
-            }
-        });
-        if (!product) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
+        try {
+            const product: Product = await this.productRepository.findOne({
+                where: { productId: id },
+                relations: {
+                    category: true
+                }
             });
-        } else {
-            response.status(StatusCodes.OK).json({ product });
+            if (!product) {
+                response.status(StatusCodes.NOT_FOUND).json({
+                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                });
+            } else {
+                response.status(StatusCodes.OK).json({ product });
+            }
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+            });
         }
     }
 
@@ -68,29 +80,43 @@ export class ProductController {
         const price = product.price;
         const weight = product.weight;
         const categoryName = product.categoryName;
-        const exisitingProduct: Product = await this.productRepository.findOne({
-            where: {
-                name: name
-            }
-        });
-        if (!exisitingProduct) {
-            const newCategory: Category = await this.categoryController.findCategory(categoryName);
-            if (!newCategory) {
-                response.status(StatusCodes.NOT_FOUND).json({
-                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+        try {
+            const exisitingProduct: Product = await this.productRepository.findOne({
+                where: {
+                    name: name
+                }
+            });
+            if (!exisitingProduct) {
+                const newCategory: Category = await this.categoryController.findCategory(categoryName);
+                if (!newCategory) {
+                    response.status(StatusCodes.NOT_FOUND).json({
+                        message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                    })
+                    return;
+                }
+                await AppDataSource.manager.transaction(async (entityManager) => {
+                    const product = Object.assign(new Product(), {
+                        name, description, price, weight, category: newCategory
+                    });
+                    try {
+                        entityManager.insert(Product, product);
+                    } catch (error) {
+                        response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                            message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                        });
+                    }
+                    response.status(StatusCodes.CREATED).json({
+                        message: getReasonPhrase(StatusCodes.CREATED)
+                    });
                 })
-                return;
+            } else {
+                response.status(StatusCodes.CONFLICT).json({
+                    message: getReasonPhrase(StatusCodes.CONFLICT)
+                });
             }
-            const product = Object.assign(new Product(), {
-                name, description, price, weight, category: newCategory
-            });
-            this.productRepository.insert(product);
-            response.status(StatusCodes.CREATED).json({
-                message: getReasonPhrase(StatusCodes.CREATED)
-            });
-        } else {
-            response.status(StatusCodes.CONFLICT).json({
-                message: getReasonPhrase(StatusCodes.CONFLICT)
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
             });
         }
     }
@@ -109,31 +135,51 @@ export class ProductController {
         const price = productReq.price;
         const weight = productReq.weight;
         const categoryName = productReq.categoryName;
-        const exisitingProduct: Product = await this.productRepository.findOne({
-            where: {
-                productId: id
+        try {
+            const exisitingProduct: Product = await this.productRepository.findOne({
+                where: {
+                    productId: id
+                }
+            });
+            if (!exisitingProduct) {
+                response.status(StatusCodes.NOT_FOUND).json({
+                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                });
+                return;
             }
-        });
-        if (!exisitingProduct) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
+            try {
+                const newCategory: Category = await this.categoryController.findCategory(categoryName);
+                if (!newCategory) {
+                    response.status(StatusCodes.NOT_FOUND).json({
+                        message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                    });
+                    return;
+                }
+                await AppDataSource.manager.transaction(async (entityManager) => {
+                    const product = Object.assign(new Product(), {
+                        name, description, price, weight, category: newCategory
+                    });
+                    try {
+                        await entityManager.update(Product, id, product);
+                        response.status(StatusCodes.OK).json({
+                        message: getReasonPhrase(StatusCodes.OK)
+                    });
+                    } catch (error) {
+                        response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                            message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                        });
+                    }
+                })
+            } catch (error) {
+                response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                    message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                });
+            }
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
             });
-            return;
         }
-        const newCategory: Category = await this.categoryController.findCategory(categoryName);
-        if (!newCategory) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
-            });
-            return;
-        }
-        const product = Object.assign(new Product(), {
-            name, description, price, weight, category: newCategory
-        });
-        await this.productRepository.update(id, product);
-        response.status(StatusCodes.OK).json({
-            message: getReasonPhrase(StatusCodes.OK)
-        });
     }
 
     async findProduct(id: number) {

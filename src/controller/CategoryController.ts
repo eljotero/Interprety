@@ -10,32 +10,44 @@ import {
 
 export class CategoryController {
 
-    private categoryRepository = AppDataSource.getRepository(Category)
+    private categoryRepository = AppDataSource.getRepository(Category);
 
     async getAllCategories(request: Request, response: Response, next: NextFunction) {
-        const categories: Category[] = await this.categoryRepository.find();
-        if (!categories) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
+        try {
+            const categories: Category[] = await this.categoryRepository.find();
+            if (!categories) {
+                response.status(StatusCodes.NOT_FOUND).json({
+                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                });
+            } else {
+                response.status(StatusCodes.OK).json({ categories });
+            }
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
             })
-        } else {
-            response.status(StatusCodes.OK).json({ categories });
         }
     }
 
     async getCategoryById(request: Request, response: Response, next: NextFunction) {
         const id: number = parseInt(request.params.id);
-        const category: Category = await this.categoryRepository.findOne({
-            where: {
-                categoryId: id
+        try {
+            const category: Category = await this.categoryRepository.findOne({
+                where: {
+                    categoryId: id
+                }
+            });
+            if (!category) {
+                response.status(StatusCodes.NOT_FOUND).json({
+                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                });
+            } else {
+                response.status(StatusCodes.OK).json({ category });
             }
-        });
-        if (!category) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
-            })
-        } else {
-            response.status(StatusCodes.OK).json({ category });
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+            });
         }
     }
 
@@ -47,27 +59,45 @@ export class CategoryController {
             });
             return;
         }
-        const exisitingCategory: Category = await this.findCategory(categoryName);
-        if (!exisitingCategory) {
-            const newCategory = new Category();
-            newCategory.name = categoryName;
-            this.categoryRepository.insert(newCategory);
-            response.status(StatusCodes.CREATED).json({
-                message: getReasonPhrase(StatusCodes.CREATED)
-            });
-        } else {
-            response.status(StatusCodes.CONFLICT).json({
-                message: getReasonPhrase(StatusCodes.CONFLICT)
-            });
-        }
+        await AppDataSource.manager.transaction(async (entityManager) => {
+            try {
+                const exisitingCategory: Category = await this.findCategory(categoryName);
+                if (!exisitingCategory) {
+                    const newCategory = new Category();
+                    newCategory.name = categoryName;
+                    try {
+                        await entityManager.insert(Category, newCategory);
+                        response.status(StatusCodes.CREATED).json({
+                            message: getReasonPhrase(StatusCodes.CREATED)
+                        });
+                    } catch (error) {
+                        response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                            message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                        });
+                    }
+                } else {
+                    response.status(StatusCodes.CONFLICT).json({
+                        message: getReasonPhrase(StatusCodes.CONFLICT)
+                    });
+                }
+            } catch (error) {
+                response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                    message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                });
+            }
+        })
     }
 
     async findCategory(categoryName: string) {
-        return await this.categoryRepository.findOne({
-            where: {
-                name: categoryName
-            }
-        })
+        try {
+            return await this.categoryRepository.findOne({
+                where: {
+                    name: categoryName
+                }
+            })
+        } catch (error) {
+            throw error;
+        }
     }
 
 }

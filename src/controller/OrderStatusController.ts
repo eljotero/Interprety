@@ -13,13 +13,19 @@ export class OrderStatusController {
     private orderStatusRepository = AppDataSource.getRepository(OrderStatus);
 
     async getAllOrderStatus(request: Request, response: Response, next: NextFunction) {
-        const result: OrderStatus[] = await this.orderStatusRepository.find();
-        if (!result) {
-            response.status(StatusCodes.NOT_FOUND).json({
-                message: getReasonPhrase(StatusCodes.NOT_FOUND)
+        try {
+            const result: OrderStatus[] = await this.orderStatusRepository.find();
+            if (!result) {
+                response.status(StatusCodes.NOT_FOUND).json({
+                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                });
+            } else {
+                response.status(StatusCodes.OK).json({ result });
+            }
+        } catch (error) {
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
             });
-        } else {
-            response.status(StatusCodes.OK).json({ result });
         }
     }
     async createOrderStatus(request: Request, response: Response, next: NextFunction) {
