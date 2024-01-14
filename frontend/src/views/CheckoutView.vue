@@ -1,5 +1,5 @@
 <template>
-  <div v-if="cart" class="row">
+  <div v-if="cartItems" class="row">
     <div class="col-75">
       <div class="container">
         <form>
@@ -91,6 +91,7 @@ export default {
   data() {
     return {
       cart: [],
+      cartItems: false,
       totalValue: 0,
       fname: '',
       email: '',
@@ -100,29 +101,33 @@ export default {
       zip: '',
     };
   },
-  mounted() {
-    this.cart = JSON.parse(this.$route.params.cart);
+  created() {
+    if(this.$route.params.cart) {
+      this.cart = JSON.parse(this.$route.params.cart);
+      this.cartItems = true;
+    }
     this.totalValue = this.$route.params.totalValue;
   },
   methods: {
     async createOrder() {
+      event.preventDefault();
       try {
         await axios.post(`http://localhost:3000/orders`, {
-          userName: this.fname,
-          userEmail: this.email,
-          userPhone: parseInt(this.phoneNumber),
-          orderStatus: 1,
-          orderedProducts: [
-            this.cart.map((product) => ({
-              productId: product.productId,
-              quantity: product.quantity,
-            })),
-          ],
-        });
+        userName: String(this.fname),
+        userEmail: String(this.email),
+        userPhone: parseInt(this.phoneNumber),
+        orderStatus: parseInt(4),
+        orderedProducts: this.cart.map((product) => ({
+          productId: parseInt(product.productId),
+          quantity: parseInt(product.quantity),
+        })),
+        orderDate: new Date(new Date().getTime() + 60 * 60 * 1000)
+      });
         Notiflix.Notify.success('Order created successfully');
       } catch (error) {
         console.error(error);
       }
+      
     },
   },
 };

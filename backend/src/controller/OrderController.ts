@@ -193,7 +193,7 @@ export class OrderController {
         const orderReq: OrderRequest = request.body;
         if (!OrderController.validateOrder(orderReq)) {
             response.status(StatusCodes.BAD_REQUEST).json({
-                message: getReasonPhrase(StatusCodes.BAD_REQUEST)
+                message: getReasonPhrase(StatusCodes.BAD_REQUEST) 
             });
             return;
         }
@@ -239,13 +239,13 @@ export class OrderController {
                                     await entityManager.save(OrderedProduct, orderedProduct);
                                 } catch (error) {
                                     response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                                        message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                                        message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) 
                                     });
                                 }
                             }
                         } catch (error) {
                             response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) 
                             });
                         }
                     }
@@ -255,14 +255,14 @@ export class OrderController {
                 }
                 catch (error) {
                     response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                        message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                        message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) 
                     });
                 }
             });
 
         } catch (error) {
             response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) + '270'
             });
         }
     }
