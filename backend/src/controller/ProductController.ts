@@ -55,7 +55,7 @@ export class ProductController {
             });
             if (!product) {
                 response.status(StatusCodes.NOT_FOUND).json({
-                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                    message: 'No such product'
                 });
             } else {
                 response.status(StatusCodes.OK).json({ product });
@@ -90,7 +90,7 @@ export class ProductController {
                 const newCategory: Category = await this.categoryController.findCategory(categoryName);
                 if (!newCategory) {
                     response.status(StatusCodes.NOT_FOUND).json({
-                        message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                        message: 'There is no such category'
                     })
                     return;
                 }
@@ -111,7 +111,7 @@ export class ProductController {
                 })
             } else {
                 response.status(StatusCodes.CONFLICT).json({
-                    message: getReasonPhrase(StatusCodes.CONFLICT)
+                    message: 'This product already exists'
                 });
             }
         } catch (error) {
@@ -143,7 +143,7 @@ export class ProductController {
             });
             if (!exisitingProduct) {
                 response.status(StatusCodes.NOT_FOUND).json({
-                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                    message: 'There is no such product'
                 });
                 return;
             }
@@ -151,7 +151,7 @@ export class ProductController {
                 const newCategory: Category = await this.categoryController.findCategory(categoryName);
                 if (!newCategory) {
                     response.status(StatusCodes.NOT_FOUND).json({
-                        message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                        message: 'There is no such category'
                     });
                     return;
                 }
@@ -162,8 +162,8 @@ export class ProductController {
                     try {
                         await entityManager.update(Product, id, product);
                         response.status(StatusCodes.OK).json({
-                        message: getReasonPhrase(StatusCodes.OK)
-                    });
+                            message: getReasonPhrase(StatusCodes.OK)
+                        });
                     } catch (error) {
                         response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
                             message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)

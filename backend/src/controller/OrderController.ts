@@ -62,7 +62,7 @@ export class OrderController {
             });
             if (!order) {
                 response.status(StatusCodes.NOT_FOUND).json({
-                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                    message: 'Given user has no orders'
                 });
             } else {
                 response.status(StatusCodes.OK).json({ order });
@@ -88,7 +88,7 @@ export class OrderController {
             });
             if (!order) {
                 response.status(StatusCodes.NOT_FOUND).json({
-                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                    message: 'There is no order with such ID'
                 })
             } else {
                 response.status(StatusCodes.OK).json({ order });
@@ -117,7 +117,7 @@ export class OrderController {
                 });
                 if (!order) {
                     response.status(StatusCodes.NOT_FOUND).json({
-                        message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                        message: 'There is no order with such ID'
                     });
                     return;
                 }
@@ -157,7 +157,7 @@ export class OrderController {
             const orderStatus: OrderStatus = await this.orderStatusController.getStatus(parseInt(request.params.status));
             if (!orderStatus) {
                 response.status(StatusCodes.NOT_FOUND).json({
-                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                    message: 'There is no such order status'
                 });
                 return;
             }
@@ -171,7 +171,7 @@ export class OrderController {
                 });
                 if (!result) {
                     response.status(StatusCodes.NOT_FOUND).json({
-                        message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                        message: 'There is no such order'
                     });
                 } else {
                     response.status(StatusCodes.OK).json({ result });
@@ -193,8 +193,7 @@ export class OrderController {
         const orderReq: OrderRequest = request.body;
         if (!OrderController.validateOrder(orderReq)) {
             response.status(StatusCodes.BAD_REQUEST).json({
-                message: getReasonPhrase(StatusCodes.BAD_REQUEST) 
-                /* Ten warunek nie przechodzi nawet z body które mi wysłałeś, zostawiam na razie żeby zająć się innymi rzeczami, próbowałem nawet w postamanie zrobić tego posta z JSONem którego mi wysłałeś ale cały czas ten warunek, chat też nic nie pomógł */
+                message: getReasonPhrase(StatusCodes.BAD_REQUEST)
             });
             return;
         }
@@ -211,8 +210,7 @@ export class OrderController {
             const newStatus: OrderStatus = await this.orderStatusController.getStatus(orderStatus);
             if (!newStatus) {
                 response.status(StatusCodes.NOT_FOUND).json({
-                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
-                    
+                    message: 'There is no such order status'
                 });
                 return;
             }
@@ -228,7 +226,7 @@ export class OrderController {
                             const product: Product = await this.productController.findProduct(productId);
                             if (!product) {
                                 response.status(StatusCodes.NOT_FOUND).json({
-                                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                                    message: 'There is no such product'
                                 });
                                 return;
                             }
@@ -269,7 +267,6 @@ export class OrderController {
         }
     }
     static validateOrder(order: OrderRequest): boolean {
-        /*
         if (
             typeof order.userName !== 'string' ||
             typeof order.userEmail !== 'string' ||
@@ -285,7 +282,6 @@ export class OrderController {
         ) {
             return false;
         }
-        */
         for (const product of order.orderedProducts) {
             if (
                 typeof product.productId !== 'number' ||
@@ -296,7 +292,7 @@ export class OrderController {
                 return false;
             }
         }
-        
+
         return true;
     }
 

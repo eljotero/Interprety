@@ -39,7 +39,7 @@ export class CategoryController {
             });
             if (!category) {
                 response.status(StatusCodes.NOT_FOUND).json({
-                    message: getReasonPhrase(StatusCodes.NOT_FOUND)
+                    message: 'No such category'
                 });
             } else {
                 response.status(StatusCodes.OK).json({ category });
@@ -77,7 +77,7 @@ export class CategoryController {
                     }
                 } else {
                     response.status(StatusCodes.CONFLICT).json({
-                        message: getReasonPhrase(StatusCodes.CONFLICT)
+                        message: 'This category already exists'
                     });
                 }
             } catch (error) {
