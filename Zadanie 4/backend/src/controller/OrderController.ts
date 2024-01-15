@@ -250,7 +250,7 @@ export class OrderController {
                         }
                     }
                     response.status(StatusCodes.OK).json({
-                        savedOrder
+                        message: getReasonPhrase(StatusCodes.OK)
                     })
                 }
                 catch (error) {
@@ -262,7 +262,7 @@ export class OrderController {
 
         } catch (error) {
             response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) + '270'
+                message: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
             });
         }
     }

@@ -200,7 +200,7 @@ export default {
 input {
   font-weight: bolder;
   background-color: #fae8e0;
-  text-align: center;
+  text-align: left;
   border: 2px solid #ef7c8e;
 }
 #addToCartButton {

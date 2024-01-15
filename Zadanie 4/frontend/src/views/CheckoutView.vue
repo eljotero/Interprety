@@ -56,23 +56,20 @@
     </div>
 
     <div class="col-25">
-      <div class="container">
-        <h4>
-          Cart
-          <span class="price" style="color: black">
-            <b>{{ cart.length }}</b>
-          </span>
+      <div class="container2">
+        <h4 class="cart-container">
+          <span class="cart-title" style = "font-weight: bolder;">Cart</span>
+          <span class="cart-count">{{ cartCount }}</span>
         </h4>
         <tr v-for="(product, index) in cart" :key="index" class="product-row">
           <p class="product-name">{{ product.name }}</p>
           <p class="product-quantity">{{ product.quantity }}</p>
           <p class="product-price">{{ product.price * product.quantity }}$</p>
         </tr>
-        <p>
+        <p class="total" style="font-weight: bold;">
           Total
           <span class="price" style="color: black"
-            ><b>{{ totalValue }}$</b></span
-          >
+            ><b>{{ totalValue }}$</b></span>
         </p>
       </div>
     </div>
@@ -110,7 +107,6 @@ export default {
   },
   methods: {
     async createOrder() {
-      event.preventDefault();
       try {
         await axios.post(`http://localhost:3000/orders`, {
         userName: String(this.fname),
@@ -136,18 +132,13 @@ export default {
 <style scoped>
 .row {
   display: flex;
+  width: 100%;
 }
-
 .col-25 {
-  flex: 25%;
+  flex: 15%;
 }
-
 .col-50 {
   flex: 50%;
-}
-
-.col-75 {
-  flex: 75%;
 }
 
 .col-25,
@@ -193,19 +184,30 @@ label {
 }
 
 span.price {
+  width: 50%;
   float: right;
   color: grey;
 }
-.product-row {
+
+.product-name, .cart-title, .total {
+  text-align: left;
+}
+
+.product-price, .cart-count, .price {
+  text-align: right;
+}
+
+.cart-container, .product-row {
   display: flex;
   justify-content: space-between;
 }
 
-.product-name {
-  text-align: left;
+.container2 {
+  background-color: #fae8e0;
+  padding: 5px 20px 15px 20px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+  width: 40%;
 }
 
-.product-price {
-  text-align: right;
-}
 </style>
